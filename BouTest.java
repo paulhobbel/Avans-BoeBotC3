@@ -15,6 +15,10 @@ public class BouTest
     
     }
     
-
+    public static void PAUL(){
+    
+        System.out.println("Paul Lindelauf loves you all <3");
+    
+    }
 
 }

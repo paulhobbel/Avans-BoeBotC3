@@ -1,3 +1,5 @@
+package boebot.output;
+
 import TI.*;
 import java.awt.Color;
 

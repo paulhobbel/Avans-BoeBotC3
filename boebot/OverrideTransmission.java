@@ -1,21 +1,21 @@
- 
+package boebot;
 
 
 /**
- * Write a description of class Remote here.
+ * Write a description of class OverrideTransmission here.
  *
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Remote
+public class OverrideTransmission
 {
     // instance variables - replace the example below with your own
     private int x;
 
     /**
-     * Constructor for objects of class Remote
+     * Constructor for objects of class OverrideTransmission
      */
-    public Remote()
+    public OverrideTransmission()
     {
         // initialise instance variables
         x = 0;

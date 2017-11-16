@@ -1,21 +1,21 @@
- 
+package boebot.sensors; 
 
 
 /**
- * Write a description of class Transmission here.
+ * Write a description of class Antenna here.
  *
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Transmission
+public class Antenna
 {
     // instance variables - replace the example below with your own
     private int x;
 
     /**
-     * Constructor for objects of class Transmission
+     * Constructor for objects of class Antenna
      */
-    public Transmission()
+    public Antenna()
     {
         // initialise instance variables
         x = 0;

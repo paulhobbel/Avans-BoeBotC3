@@ -1,3 +1,5 @@
+package boebot;
+
 import TI.*;
 /**
  * Write a description of class Motor here.

@@ -1,4 +1,5 @@
-package boebot;
+package boebot.hardware;
+
 import TI.*;
 
 /**

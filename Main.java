@@ -18,7 +18,7 @@ public class Main {
         ArrayList<Updatable> updatables = new ArrayList<>();
         updatables.add(new FadingLED(1, 10));
         updatables.add(new FlashingLED(6, 200));
-        
+        updatables.add(new Notification());
         
         
         while(true) {

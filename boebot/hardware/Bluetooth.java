@@ -1,4 +1,4 @@
-package boebot.sensors;
+package boebot.hardware;
 
 /**
  * Write a description of class Bluetooth here.

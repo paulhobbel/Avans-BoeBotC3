@@ -8,12 +8,21 @@ package boebot;
  */
 public enum Command
 {
+    STANDBY(21),
+    BREAK(20),
     FORWARDS(16),
     BACKWARDS(17),
     RIGHT(18),
     LEFT(19),
+    RIGHTNINETY(0),
+    LEFTNINETY(2),
+    CURVEFORWARDLEFT(3),
+    CURVEFORWARDRIGHT(5),
+    CURVEBACKWARDLEFT(6),
+    CURVEBACKWARDRIGHT(8),
+    FIGUREEIGHT(7),
     
-    BREAK(20),
+    
     UNKNOWN(-1);
     
     private int code;

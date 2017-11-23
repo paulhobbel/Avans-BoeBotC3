@@ -15,6 +15,7 @@ public class Remote implements Updatable
 {
     private int pin;
     private RemoteListener listener;
+    private Timer remoteTimer = new Timer(10);
     
     /**
      * Constructor for objects of class Remote
@@ -23,16 +24,11 @@ public class Remote implements Updatable
     {
         this.pin = pin;
         this.listener = listener;
+        remoteTimer.mark();
     }
     
     public void update() {
-        
-    }
-    
-    
-    public void main(String[] args) {
-        System.out.println("Listening...");
-        while(true) {
+        if(remoteTimer.timeout()) {
             int pulseLen = BoeBot.pulseIn(4, false, 6000);
             if(pulseLen > 2000) {
                 int lenghts[] = new int[12];
@@ -40,28 +36,8 @@ public class Remote implements Updatable
                 for(int i = 0; i < 12; i++)
                     lenghts[i] = BoeBot.pulseIn(4, false, 20000);
 
-                //handleCommand(convert(lenghts));
                 this.listener.onCommandUpdate(lenghts);
             }
-
-            BoeBot.wait(10);
         }
-    }
-
-    public static Command convert(int lengths[]) {
-        int code = 0;
-        int id = 0;
-        
-        for(int i = 0; i < 12; i++) {
-            if(lengths[i] > 900) {
-                if(i < 7) { // Button Code
-                    code |= (1<<i);
-                } else {     // ID
-                    id |= (1<<i-7);
-                }
-            }
-        }
-
-        return Command.forCodeAndID(code, id);
     }
 }

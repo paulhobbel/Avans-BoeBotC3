@@ -11,39 +11,41 @@ public class Ultrasone implements Updatable
 {
     private int pinTrigger;
     private int pinEcho;
-    private Timer ultrasoneTimer = new Timer(50);
-    private Timer ultrasonePulseTimer = new Timer(1);
-    private int distance;
-    private int pulse;
-    private boolean test;
+    private Timer timer;
+    private UltrasoneListener listener;
+    private boolean triggered;
 
-    public Ultrasone(){
-        ultrasoneTimer.mark();
-        pinTrigger = 4;
-        pinEcho = 5;
-        distance = -1;
-        test = false;
+    public Ultrasone(int pinTrigger, int pinEcho, UltrasoneListener listener) {
+        this.timer = new Timer(50);
+        this.timer.mark();
+
+        this.pinTrigger = pinTrigger;
+        this.pinEcho = pinEcho;
+        this.listener = listener;
+
+        this.triggered = false;
     }
 
     public void update(){
-        if(ultrasoneTimer.timeout()){
-            BoeBot.digitalWrite(pinTrigger, true);
-            ultrasonePulseTimer.mark();
-            test = true;
-        }
-        if( ultrasonePulseTimer.timeout() && test){   
-            BoeBot.digitalWrite(pinTrigger, false);
-            test = false;
-            pulse = BoeBot.pulseIn(pinEcho, false, 10000);
-            if(pulse > 0){
-                distance = (10000 - pulse) / 57;
-                System.out.println(distance);
+        if(this.triggered) {
+            BoeBot.digitalWrite(this.pinTrigger, false);
+            this.triggered = false;
+            int pulse = BoeBot.pulseIn(this.pinEcho, false, 10000);
+            if(pulse >= 0){
+                int distance = (10000 - pulse) / 57;
+                this.listener.onDistanceUpdate(distance);
+            } else {
+                this.listener.onDistanceUpdate(-1);
             }
-
-            
-
+        } else {
+            if(this.timer.timeout()) {
+                BoeBot.digitalWrite(this.pinTrigger, true);
+                this.triggered = true;
+            }
         }
-
     }
 
+    public interface UltrasoneListener {
+        public void onDistanceUpdate(int distance);
+    }
 }

@@ -9,27 +9,30 @@ import boebot.hardware.Engine;
  * @author Daan van Kempen C3
  * @version 18-11-2017
  */
-public class Transmission
+public class Transmission 
 {
-    private static final double DEGREETIME = 5.7; //time it take for the BoeBot to turn 1 degree at 1600 speed
-
+    private final double DEGREETIME = 5.7; //time it take for the BoeBot to turn 1 degree at 1600 speed
+    private Engine engineR = new Engine(15, false);
+    private Engine engineL = new Engine(14, true);
+    
     /**
      * Immediately drive at the desired speed
      * @param   speed   the speed between -100 and 100 (0 is standing still)
      */
-    public static void speed(int speed)
+    public void speed(int speed)
     {
-        Engine.speed(speed);
+        engineR.speed(speed);
+        engineL.speed(speed);
     }
     
     /**
      * Immediately drive at the desired speed
      * @param   speed   the speed between -100 and 100 (0 is standing still)
      */
-    public static void curve(int speedL, int speedR)
+    public void curve(int speedL, int speedR)
     {
-        Engine.speedR(speedR);
-        Engine.speedL(speedL);
+        engineR.speed(speedR);
+        engineL.speed(speedL);
     }
 
     /**
@@ -37,12 +40,12 @@ public class Transmission
      * @param   speed   the speed between -100 and 100 (0 is standing still)
      * @param   milli   the amount of milliseconds in which the acceleration takes place. 
      */
-    public static void goToSpeed(int speed, int milli)
+    public void goToSpeed(int speed, int milli)
     {
-        int currentSpeed = (Engine.getSpeedR() + Engine.getSpeedR()) / 2;
+        int currentSpeed = (engineR.getSpeed() + engineL.getSpeed()) / 2;
         int target = speed;
         int difference = target - currentSpeed;
-        int updateSpeed = 10;
+        int updateSpeed = 1;
         int counter = 0;
         int amountOfCycles = (int)Math.ceil(milli / updateSpeed);
         double speedPerCycle = (difference+0.0) / (amountOfCycles+0.0);
@@ -52,7 +55,7 @@ public class Transmission
             while(true)
             {
                 counter++;
-                Engine.speed((int)(currentSpeed + (counter * speedPerCycle)));
+                speed((int)(currentSpeed + (counter * speedPerCycle)));
                 //System.out.println(Engine.getSpeedR());
                 if(counter >= amountOfCycles)
                     break;
@@ -65,30 +68,32 @@ public class Transmission
      * Immediately turn at the desired speed around the center point of the axis at speed 50 for a chosen amount of degrees 
      * @param   degrees the amount to turn in degrees (positive is clockwise and negative is counter clockwise)
      */
-    public static void turn(int degrees)
+    public void turnDegrees(int degrees)
     {
         if(degrees >= 0)
-            Engine.turn(50);
+            turnSpeed(50);
         else if(degrees < 0)
-            Engine.turn(-50);
+            turnSpeed(-50);
         BoeBot.wait((int)Math.abs(degrees * DEGREETIME));
-        Engine.emergencyBrake();
+        emergencyBrake();
     }
 
     /**
-     * Immediately turn at the desired speed around the center point of the axis at a chosen speed
-     * @param   speed   the speed between -100 and 100 (0 is standing still) (positive is clockwise and negative is counter clockwise)
+     * Immediately turn to the desired speed around the center point of the axis
+     * @param   speed   the speed between -100 (counter clockwise) and 100 (clockwise). 0 is standing still
      */
-    public static void turnSpeed(int speed)
+    public void turnSpeed(int speed)
     {
-        Engine.turn(speed);
+        engineR.speed(speed);
+        engineL.speed(-speed);
     }
 
     /**
      * Immediately stops the 2 engines
      */
-    public static void emergencyBrake()
+    public void emergencyBrake()
     {
-        Engine.emergencyBrake();
+        engineR.speed(0);
+        engineL.speed(0);
     }
 }

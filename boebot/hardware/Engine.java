@@ -10,81 +10,47 @@ import TI.*;
  */
 public class Engine
 {
-    private static Servo servoL = new Servo(14);
-    private static Servo servoR = new Servo(15);
+    private Servo servo;
+    private boolean reverse;
 
-    /**
-     * Immediately drive at the desired speed
-     * @param   speed   the speed between -100 and 100 (0 is standing still)
-     */
-    public static void speed(int speed)
+    public Engine(int pin, boolean reverse)
     {
-        speedR(speed);
-        speedL(speed);
+        this.servo = new Servo(pin);
+        this.reverse = reverse;
     }
 
     /**
-     * Immediately rotate the right motor at the desired speed
+     * Immediately rotate the servo at the desired speed
      * @param   speed   the speed between -100 and 100 (0 is standing still)
      */
-    public static void speedR(int speed)
+    public void speed(int speed)
     {
         if(speed >= -100 && speed <= 100)
-            servoR.update(1500 + speed * 2);
+            if(!reverse)    
+                servo.update(1500 + speed * 2);
+            else
+                servo.update(1500 - speed * 2);
         else
-            System.out.println("Parameter out of bounds");
+            throw new Error("Parameter out of bounds");
     }
 
     /**
-     * Immediately rotate the left motor at the desired speed
-     * @param   speed   the speed between -100 and 100 (0 is standing still)
-     */
-    public static void speedL(int speed)
-    {
-        if(speed >= -100 && speed <= 100)
-            servoL.update(1500 - speed * 2);
-        else
-            System.out.println("Parameter out of bounds");
-    }
-
-    /**
-     * Immediately turn to the desired speed around the center point of the axis
-     * @param   speed   the speed between -100 (counter clockwise) and 100 (clockwise). 0 is standing still
-     */
-    public static void turn(int speed)
-    {
-        if(speed >= -100 && speed <= 100) {
-            servoR.update(1500 + speed * 2);
-            servoL.update(1500 + speed * 2);
-        }
-        else
-            System.out.println("Parameter out of bounds");
-    }
-
-    /**
-     * Returns the current speed of the right servo motor.
+     * Returns the current speed of the servo motor.
      * @return  the current speed between -100 and 100 (0 is standing still)
      */
-    public static int getSpeedR()
+    public int getSpeed()
     {
-        return (servoR.getPulseWidth() - 1500) / 2;
+        if(!reverse)
+        return (servo.getPulseWidth() - 1500) / 2;
+        else
+        return (servo.getPulseWidth() - 1500) / -2;
     }
 
     /**
-     * Returns the current speed of the left servo motor.
-     * @return  the current speed between -100 and 100 (0 is standing still)
+     * Immediately stops the engine
      */
-    public static int getSpeedL()
+    public void emergencyBrake()
     {
-        return (servoL.getPulseWidth() - 1500) / -2;
-    }
-
-    /**
-     * Immediately stops the 2 engines
-     */
-    public static void emergencyBrake()
-    {
-        servoR.update(1500);
-        servoL.update(1500);
+        servo.update(1500);
     }
 }

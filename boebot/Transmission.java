@@ -17,7 +17,6 @@ public class Transmission implements Updatable
     
     private TransmissionState state = null;
     
-    private target
     
     /**
      * Immediately drive at the desired speed
@@ -118,9 +117,5 @@ public class Transmission implements Updatable
         TURNING_RIGHT,
         TURNING_LEFT,
         IDLE
-    }
-    
-    private class TransmissionManeuvre {
-        
     }
 }

@@ -30,7 +30,9 @@ public class StateContext implements Updatable
     }
     
     public void goBack() {
-        this.setState(this.lastState);
-        System.out.println("Went back to lastState: " + this.lastState);
+        //this.setState(this.lastState);
+        this.currentState = this.lastState;
+        this.currentState.init();
+        System.out.println("Went back to lastState: " + this.currentState);
     }
 }

@@ -14,55 +14,32 @@ import boebot.hardware.Remote.RemoteListener;
 public class OverrideState extends State
 {   
     private Timer switchTimer;
-    private Transmission transmission;
+    private CommandHandler handler;
 
     public OverrideState() {
         this.switchTimer = new Timer(1000);
         this.switchTimer.mark();
-
-        this.transmission = new Transmission();
+        
+        this.handler = new CommandHandler();
     }
 
-    public void init() {
+    public void init(StateContext context) {
         this.switchTimer.mark();
-        this.transmission.emergencyBrake();
     }
 
     public void update(StateContext context, Robot robot) {
         if(robot.getCurrentDistance() != -1 && robot.getCurrentDistance() < 10) {
             context.setState(new CollisionState());
         }
-
-        switch(robot.getCurrentCommand()) {
-            case FORWARDS:
-            this.transmission.speed(50);
-            break;
-            
-            case BACKWARDS:
-            this.transmission.speed(-50);
-            break;
-            
-            case BACKWARDS_CURVE_LEFT:
-            case BACKWARDS_CURVE_RIGHT:
-            
-            case RIGHT:
-            this.transmission.turnSpeed(25);
-            break;
-            
-            case LEFT:
-            this.transmission.turnSpeed(-25);
-            break;
-            
-            case RIGHT_NINETY:
-            case LEFT_NINETY:
-            break;
-
-            case STANDBY:
+        
+        Command command = robot.getCurrentCommand();
+        
+        if(command == Command.STANDBY) {
             if(this.switchTimer.timeout()) {
-                System.out.println("Switching to last state");
-                context.goBack();
+                context.setState(new IdleState());
             }
-            break;
+        } else {
+            this.handler.handle(command);
         }
     }
 }

@@ -8,30 +8,21 @@ package boebot;
  */
 public class CollisionState extends State
 {
-    private Transmission transmission;
+    private CommandHandler handler;
     
     public CollisionState() {
-        this.transmission = new Transmission();
+        this.handler = new CommandHandler();
     }
     
     public void update(StateContext context, Robot robot) {
-        if(robot.getCurrentDistance() >= 10) {
+        if(robot.getCurrentDistance() != -1 && robot.getCurrentDistance() > 10) {
             context.goBack();
         }
+        
         Command command = robot.getCurrentCommand();
-
-        switch(command) {
-            case BACKWARDS:
-            this.transmission.speed(-50);
-            break;
-            case BACKWARDS_CURVE_LEFT:
-            case BACKWARDS_CURVE_RIGHT:
-            case RIGHT:
-            case LEFT:
-            case RIGHT_NINETY:
-            case LEFT_NINETY:
-            System.out.println("Bou, push push dat Engine en Transmission... : " + command);
-            break;
+        
+        if(command != Command.FORWARDS && command != Command.FORWARDS_CURVE_LEFT && command != Command.FORWARDS_CURVE_RIGHT) {
+            this.handler.handle(command);
         }
     }
 }

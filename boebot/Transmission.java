@@ -9,11 +9,15 @@ import boebot.hardware.Engine;
  * @author Daan van Kempen C3
  * @version 18-11-2017
  */
-public class Transmission 
+public class Transmission implements Updatable
 {
     private final double DEGREETIME = 5.7; //time it take for the BoeBot to turn 1 degree at 1600 speed
     private Engine engineR = new Engine(15, false);
     private Engine engineL = new Engine(14, true);
+    
+    private TransmissionState state = null;
+    
+    private target
     
     /**
      * Immediately drive at the desired speed
@@ -23,6 +27,17 @@ public class Transmission
     {
         engineR.speed(speed);
         engineL.speed(speed);
+    }
+    
+    public void update() {
+        switch(this.state) {
+            case SPEEDING_UP:
+            
+                break;
+            case SLOWING_DOWN:
+            
+                break;
+        }
     }
     
     /**
@@ -75,7 +90,7 @@ public class Transmission
         else if(degrees < 0)
             turnSpeed(-50);
         BoeBot.wait((int)Math.abs(degrees * DEGREETIME));
-        emergencyBrake();
+        //emergencyBrake();
     }
 
     /**
@@ -95,5 +110,17 @@ public class Transmission
     {
         engineR.speed(0);
         engineL.speed(0);
+    }
+    
+    private enum TransmissionState {
+        SPEEDING_UP,
+        SLOWING_DOWN,
+        TURNING_RIGHT,
+        TURNING_LEFT,
+        IDLE
+    }
+    
+    private class TransmissionManeuvre {
+        
     }
 }

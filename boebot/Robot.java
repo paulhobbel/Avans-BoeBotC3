@@ -23,16 +23,26 @@ public class Robot implements RemoteListener, UltrasoneListener {
     private Command currentCommand; 
     private int currentDistance;
     
+    private Thread ultrasoneThread;
+    private Thread remoteThread;
+    
     public Robot() {
         //this.updatables.add(new FadingLED(1, 10));
         //this.updatables.add(new FlashingLED(6, 200));
         //this.updatables.add(new Notification());
-        this.updatables.add(new Remote(2, this));
-        this.updatables.add(new Ultrasone(0, 1, this));
+        
+        //this.updatables.add(new Ultrasone(0, 1, this));
+        //this.updatables.add(new Remote(2, this));
         this.updatables.add(new StateContext(new IdleState(), this));
+        
+        this.ultrasoneThread = new Thread(new Ultrasone(0, 1, this));
+        this.remoteThread = new Thread(new Remote(2, this));
     }
     
     public void loop() {
+        this.ultrasoneThread.start();
+        this.remoteThread.start();
+        
         while(true) {
             for(Updatable updatable : this.updatables) {
                 updatable.update();
@@ -53,12 +63,12 @@ public class Robot implements RemoteListener, UltrasoneListener {
     }
     
     public void onCommandUpdate(Command command) {
-        //System.out.println(command);
+        System.out.println(command);
         this.currentCommand = command;
     }
     
     public void onDistanceUpdate(int distance) {
-        System.out.println(distance);
+        //System.out.println(distance);
         this.currentDistance = distance;
     }
     

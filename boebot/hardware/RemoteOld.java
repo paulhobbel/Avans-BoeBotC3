@@ -1,7 +1,8 @@
 package boebot.hardware;
 
-import TI.*;
+import boebot.Updatable;
 import boebot.Command;
+import TI.*;
 
 /**
  * Write a description of class Remote here.
@@ -9,22 +10,25 @@ import boebot.Command;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Remote implements Runnable
+public class RemoteOld implements Updatable
 {
     private int pin;
     private RemoteListener listener;
+    private Timer remoteTimer = new Timer(10);
+
     /**
      * Constructor for objects of class Remote
      */
-    public Remote(int pin, RemoteListener listener)
+    public RemoteOld(int pin, RemoteListener listener)
     {
         this.pin = pin;
         this.listener = listener;
+        remoteTimer.mark();
     }
-    
-    public void run() {
-        while(true) {
-            int pulseLen = BoeBot.pulseIn(this.pin, false, 8000);
+
+    public void update() {
+        if(remoteTimer.timeout()) {
+            int pulseLen = BoeBot.pulseIn(this.pin, false, 6000);
             if(pulseLen > 2000) {
                 int lengths[] = new int[12];
 
@@ -32,10 +36,9 @@ public class Remote implements Runnable
                     lengths[i] = BoeBot.pulseIn(this.pin, false, 20000);
                 this.listener.onCommandUpdate(this.convertLengths(lengths));
             }
-            BoeBot.wait(10);
         }
     }
-    
+
     private Command convertLengths(int lengths[]) {
         int code = 0;
         int id = 0;

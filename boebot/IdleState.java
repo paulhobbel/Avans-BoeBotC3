@@ -27,7 +27,6 @@ public class IdleState extends State
     public void update(StateContext context, Robot robot) {
         if(robot.getCurrentCommand() == Command.STANDBY) {
             if(this.switchTimer.timeout()) {
-                System.out.println("Switching to OverrideState");
                 context.setState(new OverrideState());
             }
         }

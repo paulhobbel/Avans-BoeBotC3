@@ -35,8 +35,8 @@ public class Robot implements RemoteListener, UltrasoneListener {
         //this.updatables.add(new Remote(2, this));
         this.updatables.add(new StateContext(new IdleState(), this));
         
-        this.ultrasoneThread = new Thread(new Ultrasone(0, 1, this));
-        this.remoteThread = new Thread(new Remote(2, this));
+        this.ultrasoneThread = new Thread(new Ultrasone(3, 2, this));
+        this.remoteThread = new Thread(new Remote(0, this));
     }
     
     public void loop() {
@@ -63,12 +63,10 @@ public class Robot implements RemoteListener, UltrasoneListener {
     }
     
     public void onCommandUpdate(Command command) {
-        System.out.println(command);
         this.currentCommand = command;
     }
     
     public void onDistanceUpdate(int distance) {
-        //System.out.println(distance);
         this.currentDistance = distance;
     }
     

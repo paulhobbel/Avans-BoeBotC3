@@ -15,6 +15,7 @@ public class CollisionState extends State
     }
     
     public void update(StateContext context, Robot robot) {
+        this.handler.update();
         if(robot.getCurrentDistance() != -1 && robot.getCurrentDistance() > 10) {
             context.goBack();
         }

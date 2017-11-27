@@ -17,6 +17,10 @@ public class CommandHandler
         this.transmission = new Transmission();
     }
     
+    public void update() {
+        this.transmission.update();
+    }
+    
     public void handle(Command command) {
         switch(command) {
             case BREAK:

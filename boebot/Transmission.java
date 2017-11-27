@@ -14,39 +14,30 @@ public class Transmission implements Updatable
     private final double DEGREETIME = 5.7; //time it take for the BoeBot to turn 1 degree at 1600 speed
     private Engine engineR = new Engine(15, false);
     private Engine engineL = new Engine(14, true);
-    
-    private TransmissionState state = null;
-    
-    
+
     /**
      * Immediately drive at the desired speed
      * @param   speed   the speed between -100 and 100 (0 is standing still)
      */
     public void speed(int speed)
     {
-        engineR.speed(speed);
-        engineL.speed(speed);
+        engineR.setSpeed(speed, 5000);
+        engineL.setSpeed(speed, 5000);
     }
-    
+
     public void update() {
-        switch(this.state) {
-            case SPEEDING_UP:
-            
-                break;
-            case SLOWING_DOWN:
-            
-                break;
-        }
+        this.engineR.update();
+        this.engineL.update();
     }
-    
+
     /**
      * Immediately drive at the desired speed
      * @param   speed   the speed between -100 and 100 (0 is standing still)
      */
     public void curve(int speedL, int speedR)
     {
-        engineR.speed(speedR);
-        engineL.speed(speedL);
+        this.engineR.setSpeed(speedR, 1000);
+        this.engineL.setSpeed(speedL, 1000);
     }
 
     /**
@@ -69,7 +60,7 @@ public class Transmission implements Updatable
             while(true)
             {
                 counter++;
-                speed((int)(currentSpeed + (counter * speedPerCycle)));
+                speed((int)(currentSpeed + Math.round(counter * speedPerCycle)));
                 //System.out.println(Engine.getSpeedR());
                 if(counter >= amountOfCycles)
                     break;
@@ -98,8 +89,8 @@ public class Transmission implements Updatable
      */
     public void turnSpeed(int speed)
     {
-        engineR.speed(speed);
-        engineL.speed(-speed);
+        engineR.setSpeed(speed, 100);
+        engineL.setSpeed(-speed, 100);
     }
 
     /**
@@ -107,15 +98,7 @@ public class Transmission implements Updatable
      */
     public void emergencyBrake()
     {
-        engineR.speed(0);
-        engineL.speed(0);
-    }
-    
-    private enum TransmissionState {
-        SPEEDING_UP,
-        SLOWING_DOWN,
-        TURNING_RIGHT,
-        TURNING_LEFT,
-        IDLE
+        engineR.setSpeed(0, 1);
+        engineL.setSpeed(0, 1);
     }
 }

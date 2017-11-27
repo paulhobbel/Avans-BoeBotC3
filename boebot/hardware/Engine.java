@@ -14,9 +14,9 @@ public class Engine implements Updatable
     private Servo servo;
     private boolean reverse;
 
-    private double amountOfCycles;
+    private int amountOfCycles;
     private double speedPerCycle;
-    private double currentCycles;
+    private int currentCycles;
     private int beginSpeed;
 
     private int seq;
@@ -35,16 +35,19 @@ public class Engine implements Updatable
             double speed = this.beginSpeed + this.currentCycles * this.speedPerCycle;
 
             //System.out.println(speed);
-            if(this.reverse) {
-                speed = 1500 + speed * 2;
-            } else {
-                speed = 1500 - speed * 2;
-            }
+            setSpeedInstant((int)speed);
 
-            this.servo.update((int)speed);
+            //this.servo.update((int)speed);
 
             this.currentCycles++;
             //System.out.println("speed: " + speed + "; currentCycles: " + this.currentCycles);
+        }
+        else
+        {
+            this.beginSpeed = 0;
+            this.amountOfCycles = 0;
+            this.speedPerCycle = 0;
+            this.currentCycles = 0;
         }
 
         // if(this.targetSpeed != this.getSpeed()) {
@@ -60,13 +63,13 @@ public class Engine implements Updatable
         // this.counter++;
         // }
         // if(this.currentCycles < this.amountOfCycles) {
-            // this.currentCycles++;
-            // int speed = this.beginSpeed + (int)Math.round(this.currentCycles * speedPerCycle);
-            // if(this.reverse) {
-                // this.servo.update(1500 + speed * 2);
-            // } else {
-                // this.servo.update(1500 - speed * 2);
-            // }
+        // this.currentCycles++;
+        // int speed = this.beginSpeed + (int)Math.round(this.currentCycles * speedPerCycle);
+        // if(this.reverse) {
+        // this.servo.update(1500 + speed * 2);
+        // } else {
+        // this.servo.update(1500 - speed * 2);
+        // }
         // }
     }
 
@@ -76,7 +79,7 @@ public class Engine implements Updatable
      */
     public void setSpeed(int target, int time)
     {
-        if(!(target >= -100 && target <= 100))
+        if(!(target >= -100 && target <= 100 && time > 0))
             throw new Error("Parameter out of bounds");
 
         // int difference = target - this.getSpeed();
@@ -91,14 +94,24 @@ public class Engine implements Updatable
         // }
 
         this.beginSpeed = this.getSpeed();
-        
+
         double difference = target - this.beginSpeed;
         
-        this.amountOfCycles = time;
-        this.speedPerCycle = difference / amountOfCycles;
-        this.currentCycles = 0;
-        
+        this.speedPerCycle = (difference / time);
+        this.amountOfCycles = time + 1;
+        this.currentCycles = 1;
+
         System.out.println("amountOfCycles: " + this.amountOfCycles + "; speedPerCycle: " + this.speedPerCycle + "; currentCycles: " + this.currentCycles + "; difference: " + difference + "; beginSpeed: " + beginSpeed);
+    }
+
+    public void setSpeedInstant(int speed)
+    {
+        if(!(speed >= -100 && speed <= 100))
+            throw new Error("Parameter out of bounds");
+        if(!this.reverse)
+            this.servo.update(1500 + speed * 2);
+        else
+            this.servo.update(1500 - speed * 2);
     }
 
     /**

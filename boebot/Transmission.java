@@ -21,8 +21,8 @@ public class Transmission implements Updatable
      */
     public void speed(int speed)
     {
-        engineR.setSpeed(speed, 5000);
-        engineL.setSpeed(speed, 5000);
+        engineR.setSpeed(speed, 1000);
+        engineL.setSpeed(speed, 1000);
     }
 
     public void update() {
@@ -98,7 +98,7 @@ public class Transmission implements Updatable
      */
     public void emergencyBrake()
     {
-        engineR.setSpeed(0, 1);
-        engineL.setSpeed(0, 1);
+        engineR.setSpeed(0, 100);
+        engineL.setSpeed(0, 100);
     }
 }

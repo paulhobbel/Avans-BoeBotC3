@@ -73,7 +73,8 @@ public class Robot implements RemoteListener, UltrasoneListener {
      * @param command A command given by the remote.
      */
     public void onCommandUpdate(Command command) {
-        this.currentCommand = command;
+        if(this.currentCommand != command)
+            this.currentCommand = command;
     }
     
     /**

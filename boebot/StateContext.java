@@ -7,7 +7,7 @@ package boebot;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class StateContext implements Updatable
+public class StateContext extends Updatable
 {
     private State currentState;
     private State lastState;
@@ -18,6 +18,10 @@ public class StateContext implements Updatable
         this.robot = robot;
     }
     
+    public Robot getRobot() {
+        return this.robot;
+    }
+    
     public void setState(State newState) {
         this.lastState = this.currentState;
         this.currentState = newState;
@@ -26,11 +30,10 @@ public class StateContext implements Updatable
     }
     
     public void update() {
-        this.currentState.update(this, this.robot);
+        this.currentState.update(this);
     }
     
     public void goBack() {
-        //this.setState(this.lastState);
         this.currentState = this.lastState;
         this.currentState.init();
         System.out.println("Went back to lastState: " + this.currentState);

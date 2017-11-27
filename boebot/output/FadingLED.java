@@ -9,7 +9,7 @@ import boebot.Updatable;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class FadingLED implements Updatable
+public class FadingLED extends Updatable
 {   
     private PWM led;
     private int i = 255;

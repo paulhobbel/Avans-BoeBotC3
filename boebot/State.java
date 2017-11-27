@@ -12,5 +12,5 @@ public abstract class State
         // Not gonna do anything now :P
     }
     
-    public abstract void update(StateContext context, Robot robot);
+    public abstract void update(StateContext context);
 }

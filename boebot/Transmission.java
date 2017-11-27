@@ -9,7 +9,7 @@ import boebot.hardware.Engine;
  * @author Daan van Kempen C3
  * @version 18-11-2017
  */
-public class Transmission implements Updatable
+public class Transmission extends Updatable
 {
     private final double DEGREETIME = 5.7; //time it take for the BoeBot to turn 1 degree at 1600 speed
     private Engine engineR = new Engine(15, false);

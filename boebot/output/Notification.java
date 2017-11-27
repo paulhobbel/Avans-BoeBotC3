@@ -9,7 +9,7 @@ import boebot.Updatable;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Notification implements Updatable
+public class Notification extends Updatable
 {
     private Thread speaker;
     private Timer timer;

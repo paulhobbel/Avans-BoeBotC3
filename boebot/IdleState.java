@@ -24,7 +24,9 @@ public class IdleState extends State
         this.switchTimer.mark();
     }
     
-    public void update(StateContext context, Robot robot) {
+    public void update(StateContext context) {
+        Robot robot = context.getRobot();
+        
         if(robot.getCurrentCommand() == Command.STANDBY) {
             if(this.switchTimer.timeout()) {
                 context.setState(new OverrideState());

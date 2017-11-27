@@ -9,7 +9,7 @@ import boebot.Updatable;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class FlashingLED implements Updatable
+public class FlashingLED extends Updatable
 {
     private int ledPin;
     private Timer timer;

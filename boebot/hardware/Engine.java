@@ -9,7 +9,7 @@ import boebot.Updatable;
  * @author Daan van Kempen C3
  * @version 18-11-2017
  */
-public class Engine implements Updatable
+public class Engine extends Updatable
 {
     private Servo servo;
     private boolean reverse;

@@ -18,35 +18,29 @@ import boebot.hardware.Ultrasone.UltrasoneListener;
  * @version (a version number or a date)
  */
 public class Robot implements RemoteListener, UltrasoneListener {
-    ArrayList<Updatable> updatables = new ArrayList<>();
-    
     private Command currentCommand; 
     private int currentDistance;
     
-    private Thread ultrasoneThread;
-    private Thread remoteThread;
+    private ArrayList<Thread> threads = new ArrayList();
+    
+    private StateContext context;
+    private Transmission transmission;
     
     public Robot() {
-        //this.updatables.add(new FadingLED(1, 10));
-        //this.updatables.add(new FlashingLED(6, 200));
-        //this.updatables.add(new Notification());
+        this.context = new StateContext(new IdleState(), this);
+        this.transmission = new Transmission();
         
-        //this.updatables.add(new Ultrasone(0, 1, this));
-        //this.updatables.add(new Remote(2, this));
-        this.updatables.add(new StateContext(new IdleState(), this));
-        
-        this.ultrasoneThread = new Thread(new Ultrasone(3, 2, this));
-        this.remoteThread = new Thread(new Remote(0, this));
+        this.threads.add(new Thread(new Ultrasone(3, 2, this)));
+        this.threads.add(new Thread(new Remote(0, this)));
     }
     
     public void loop() {
-        this.ultrasoneThread.start();
-        this.remoteThread.start();
+        for(Thread thread : this.threads) {
+            thread.start();
+        }
         
         while(true) {
-            for(Updatable updatable : this.updatables) {
-                updatable.update();
-            }
+            Updatable.updateAll();
             BoeBot.wait(1);
         }
     }
@@ -62,19 +56,35 @@ public class Robot implements RemoteListener, UltrasoneListener {
         return this.currentDistance;
     }
     
+    public StateContext getContext() {
+        return this.context;
+    }
+    
+    public Transmission getTransmission() {
+        return this.transmission;
+    }
+    
+    /**
+     * Callback of RemoteListener
+     * 
+     * This callback will be called by Remote,
+     * once the remote command has changed.
+     * 
+     * @param command A command given by the remote.
+     */
     public void onCommandUpdate(Command command) {
         this.currentCommand = command;
     }
     
+    /**
+     * Callback of UltrasoneListener
+     * 
+     * This callback will be called by Ultrasone,
+     * once the distance has changed.
+     * 
+     * @param distance Distance in centimeters.
+     */
     public void onDistanceUpdate(int distance) {
         this.currentDistance = distance;
-    }
-    
-    /**
-     * The main loop of the BoeBot
-     */
-    public static void main(String[] args) {
-        Robot robot = new Robot();
-        robot.loop();
     }
 }

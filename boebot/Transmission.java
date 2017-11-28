@@ -15,70 +15,60 @@ public class Transmission extends Updatable
     private Engine engineR = new Engine(15, false);
     private Engine engineL = new Engine(14, true);
 
-    /**
-     * Immediately drive at the desired speed
-     * @param   speed   the speed between -100 and 100 (0 is standing still)
-     */
-    public void speed(int speed)
-    {
-        engineR.setSpeed(speed, 1000);
-        engineL.setSpeed(speed, 1000);
+    public void forwards(Speed speed) {
+        this.speed(speed.getSpeed(), speed.getAcceleration());
     }
-
+    
+    public void backwards(Speed speed) {
+        this.speed(-speed.getSpeed(), speed.getAcceleration());
+    }
+    
+    public void brake(Speed speed) {
+        this.emergencyBrake(speed.getAcceleration());
+    }
+    
+    public void right(Speed speed) {
+        this.turnSpeed(speed.getSpeed(), speed.getAcceleration());
+    }
+    
+    public void left(Speed speed) {
+        this.turnSpeed(-speed.getSpeed(), speed.getAcceleration());
+    }
+    
+    public void curveRight(Speed speed) {
+        this.curve(speed.getSpeedFast(), speed.getSpeedSlow(), speed.getAcceleration());
+    }
+    
+    public void curveLeft(Speed speed) {
+        this.curve(speed.getSpeedSlow(), speed.getSpeedFast(), speed.getAcceleration());
+    }
+    
     public void update() {
         this.engineR.update();
         this.engineL.update();
     }
-
+    
     /**
      * Immediately drive at the desired speed
      * @param   speed   the speed between -100 and 100 (0 is standing still)
      */
-    public void curve(int speedL, int speedR)
+    private void speed(int speed, int time)
     {
-        this.engineR.setSpeed(speedR, 1000);
-        this.engineL.setSpeed(speedL, 1000);
+        engineR.setSpeed(speed, time);
+        engineL.setSpeed(speed, time);
     }
-
+    
     /**
-     * Slowly accelerate the motors to the desired speed
-     * @param   speed   the speed between -100 and 100 (0 is standing still)
-     * @param   milli   the amount of milliseconds in which the acceleration takes place. 
-     */
-    public void goToSpeed(int speed, int milli)
-    {
-        int currentSpeed = (engineR.getSpeed() + engineL.getSpeed()) / 2;
-        int target = speed;
-        int difference = target - currentSpeed;
-        int updateSpeed = 1;
-        int counter = 0;
-        int amountOfCycles = (int)Math.ceil(milli / updateSpeed);
-        double speedPerCycle = (difference+0.0) / (amountOfCycles+0.0);
-
-        if(difference != 0)
-        {
-            while(true)
-            {
-                counter++;
-                speed((int)(currentSpeed + Math.round(counter * speedPerCycle)));
-                //System.out.println(Engine.getSpeedR());
-                if(counter >= amountOfCycles)
-                    break;
-                BoeBot.wait(updateSpeed);
-            }
-        }
-    }
-
-    /**
+     * BROKEN!!!
      * Immediately turn at the desired speed around the center point of the axis at speed 50 for a chosen amount of degrees 
      * @param   degrees the amount to turn in degrees (positive is clockwise and negative is counter clockwise)
      */
-    public void turnDegrees(int degrees)
+    private void turnDegrees(int degrees)
     {
         if(degrees >= 0)
-            turnSpeed(50);
+            turnSpeed(50, 50);
         else if(degrees < 0)
-            turnSpeed(-50);
+            turnSpeed(-50, 50);
         BoeBot.wait((int)Math.abs(degrees * DEGREETIME));
         //emergencyBrake();
     }
@@ -87,18 +77,67 @@ public class Transmission extends Updatable
      * Immediately turn to the desired speed around the center point of the axis
      * @param   speed   the speed between -100 (counter clockwise) and 100 (clockwise). 0 is standing still
      */
-    public void turnSpeed(int speed)
+    private void turnSpeed(int speed, int time)
     {
-        engineR.setSpeed(speed, 100);
-        engineL.setSpeed(-speed, 100);
+        engineR.setSpeed(speed, time);
+        engineL.setSpeed(-speed, time);
+    }
+    
+    private void curve(int speedL, int speedR, int time)
+    {
+        engineL.setSpeed(speedL, time);
+        engineR.setSpeed(speedR, time);
     }
 
     /**
      * Immediately stops the 2 engines
      */
-    public void emergencyBrake()
+    private void emergencyBrake(int time)
     {
-        engineR.setSpeed(0, 100);
-        engineL.setSpeed(0, 100);
+        engineR.setSpeed(0, time);
+        engineL.setSpeed(0, time);
+    }
+
+    public enum Speed
+    {
+        FAST(100, 500),
+        MEDIUM(50, 250),
+        SLOW(25, 100),
+        
+        TIGHT(5, 75, 200),
+        NORMAL(15, 75, 200),
+        LOOSE(30, 75, 200);
+        
+        private int speed;
+        private int speedSlow;
+        private int speedFast;
+        private int acceleration;
+        
+        Speed(int speed, int acceleration) {
+            this.speed = speed;
+            this.acceleration = acceleration;
+        }
+        
+        Speed(int speedSlow, int speedFast, int acceleration) {
+            this.speedSlow = speedSlow;
+            this.speedFast = speedFast;
+            this.acceleration = acceleration;
+        }
+        
+        public int getSpeed() {
+            return this.speed;
+        }
+        
+        public int getSpeedSlow() {
+            return this.speedSlow;
+        }
+        
+        public int getSpeedFast() {
+            return this.speedFast;
+        }
+        
+        public int getAcceleration() {
+            return this.acceleration;
+        }
     }
 }

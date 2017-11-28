@@ -1,5 +1,10 @@
 package boebot;
 
+import boebot.hardware.Remote.RemoteListener;
+import boebot.hardware.Ultrasone.UltrasoneListener;
+
+import static boebot.Transmission.Speed.*;
+
 /**
  * Write a description of class ColissionState here.
  *
@@ -8,39 +13,54 @@ package boebot;
  */
 public class CollisionState extends State
 {   
+    Command lastCommand = Command.UNKNOWN;
+
+    public CollisionState(StateContext context) {
+        super(context);
+    }
+
+    public void init() {
+        // transmission.do(FORWARD, SLOW);
+        // transmission.forward(SLOW);
+        // 
+        this.context.getTransmission().brake(SLOW);
+    }
+
     public void update(StateContext context) {
-        Robot robot = context.getRobot();
-        if(robot.getCurrentDistance() != -1 && robot.getCurrentDistance() > 10) {
+        if(!context.hasCollision()) {
             context.goBack();
         }
-        
-        Command command = robot.getCurrentCommand();
-        Transmission transmission = robot.getTransmission();
-        switch(command) {
-            case BREAK:
-            transmission.emergencyBrake();
-            break;
 
-            case BACKWARDS:
-            transmission.speed(-100);
-            break;
-            case BACKWARDS_CURVE_LEFT:
-            transmission.curve(-15, -75);
-            break;
-            case BACKWARDS_CURVE_RIGHT:
-            transmission.curve(-75, -15);
-            break;
+        if(this.lastCommand != context.getCommand()) {
+            this.lastCommand = context.getCommand();
 
-            case RIGHT:
-            transmission.turnSpeed(25);
-            break;
-            case LEFT:
-            transmission.turnSpeed(-25);
-            break;
-            case RIGHT_NINETY:
-            break;
-            case LEFT_NINETY:
-            break;
+            Transmission transmission = context.getTransmission();
+            switch(this.lastCommand) {
+                case BREAK:
+                transmission.brake(SLOW);
+                break;
+
+                case BACKWARDS:
+                transmission.backwards(FAST);
+                break;
+                case BACKWARDS_CURVE_LEFT:
+                transmission.curveLeftBackwards(NORMAL_CURVE);
+                break;
+                case BACKWARDS_CURVE_RIGHT:
+                transmission.curveRightBackwards(NORMAL_CURVE);
+                break;
+
+                case RIGHT:
+                transmission.right(SLOW);
+                break;
+                case LEFT:
+                transmission.left(SLOW);
+                break;
+                case RIGHT_NINETY:
+                break;
+                case LEFT_NINETY:
+                break;
+            }
         }
     }
 }

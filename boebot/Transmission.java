@@ -35,12 +35,20 @@ public class Transmission extends Updatable
         this.turnSpeed(-speed.getSpeed(), speed.getAcceleration());
     }
     
-    public void curveRight(Speed speed) {
+    public void curveRightForwards(Speed speed) {
         this.curve(speed.getSpeedFast(), speed.getSpeedSlow(), speed.getAcceleration());
     }
     
-    public void curveLeft(Speed speed) {
+    public void curveLeftForwards(Speed speed) {
         this.curve(speed.getSpeedSlow(), speed.getSpeedFast(), speed.getAcceleration());
+    }
+    
+    public void curveRightBackwards(Speed speed) {
+        this.curve(-speed.getSpeedFast(), -speed.getSpeedSlow(), speed.getAcceleration());
+    }
+    
+    public void curveLeftBackwards(Speed speed) {
+        this.curve(-speed.getSpeedSlow(), -speed.getSpeedFast(), speed.getAcceleration());
     }
     
     public void update() {
@@ -104,9 +112,9 @@ public class Transmission extends Updatable
         MEDIUM(50, 250),
         SLOW(25, 100),
         
-        TIGHT(5, 75, 200),
-        NORMAL(15, 75, 200),
-        LOOSE(30, 75, 200);
+        TIGHT_CURVE(5, 75, 200),
+        NORMAL_CURVE(15, 75, 200),
+        LOOSE_CURVE(30, 75, 200);
         
         private int speed;
         private int speedSlow;

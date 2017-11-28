@@ -2,8 +2,7 @@ package boebot;
 
 import TI.*;
 
-import boebot.hardware.Remote;
-import boebot.hardware.Remote.RemoteListener;
+import static boebot.Transmission.Speed.*;
 
 /**
  * Write a description of class OverrideState here.
@@ -12,69 +11,84 @@ import boebot.hardware.Remote.RemoteListener;
  * @version (a version number or a date)
  */
 public class OverrideState extends State
-{   
+{
+    private Command lastCommand = Command.UNKNOWN;
     private Timer switchTimer;
 
-    public OverrideState() {
+    private Transmission transmission;
+
+    public OverrideState(StateContext context) {
+        super(context);
+        //this.transmission = new Transmission();
+
         this.switchTimer = new Timer(1000);
         this.switchTimer.mark();
     }
 
-    public void init(StateContext context) {
+    public void init() {
         this.switchTimer.mark();
+        //if(!this.lastCommand.equals(Command.UNKNOWN)) {
+        this.handleCommand(this.lastCommand);
+        System.out.println("INIT");
+        //}
     }
 
     public void update(StateContext context) {
-        Robot robot = context.getRobot();
-        
-        if(robot.getCurrentDistance() != -1 && robot.getCurrentDistance() < 10) {
-            context.setState(new CollisionState());
+        if(context.hasCollision()) {
+            context.setState(new CollisionState(context));
         }
 
-        Command command = robot.getCurrentCommand();
-        Transmission transmission = robot.getTransmission();
-
-        if(command == Command.STANDBY) {
-            if(this.switchTimer.timeout()) {
-                context.setState(new IdleState());
+        //Transmission transmission = context.getTransmission();
+        if(this.lastCommand != context.getCommand()) {
+            this.lastCommand = context.getCommand();
+            if(this.lastCommand == Command.STANDBY) {
+                if(this.switchTimer.timeout()) {
+                    context.setState(new IdleState(context));
+                }
+            } else {
+                this.handleCommand(this.lastCommand);
             }
-        } else {
-            switch(command) {
-                case BREAK:
-                transmission.emergencyBrake();
-                break;
+        }
+    }
 
-                case FORWARDS:
-                transmission.speed(100);
-                break;
-                case FORWARDS_CURVE_LEFT:
-                transmission.curve(15, 75);
-                break;
-                case FORWARDS_CURVE_RIGHT:
-                transmission.curve(75, 15);
-                break;
+    private void handleCommand(Command command) {
+        Transmission transmission = this.context.getTransmission();
+        System.out.println(command);
+        switch(command) {
+            case BREAK:
+            transmission.brake(SLOW);
+            break;
 
-                case BACKWARDS:
-                transmission.speed(-100);
-                break;
-                case BACKWARDS_CURVE_LEFT:
-                transmission.curve(-15, -75);
-                break;
-                case BACKWARDS_CURVE_RIGHT:
-                transmission.curve(-75, -15);
-                break;
+            case FORWARDS:
+            transmission.forwards(FAST);
+            break;
+            case FORWARDS_CURVE_LEFT:
+            transmission.curveLeftForwards(NORMAL_CURVE);
+            break;
+            case FORWARDS_CURVE_RIGHT:
+            transmission.curveRightForwards(NORMAL_CURVE);
+            break;
 
-                case RIGHT:
-                transmission.turnSpeed(25);
-                break;
-                case LEFT:
-                transmission.turnSpeed(-25);
-                break;
-                case RIGHT_NINETY:
-                break;
-                case LEFT_NINETY:
-                break;
-            }
+            case BACKWARDS:
+            transmission.backwards(FAST);
+            break;
+            case BACKWARDS_CURVE_LEFT:
+            transmission.curveLeftBackwards(NORMAL_CURVE);
+            break;
+            case BACKWARDS_CURVE_RIGHT:
+            transmission.curveRightBackwards(NORMAL_CURVE);
+            break;
+
+            case RIGHT:
+            transmission.right(SLOW);
+            break;
+            case LEFT:
+            transmission.left(SLOW);
+            break;
+            case RIGHT_NINETY:
+            break;
+            case LEFT_NINETY:
+            break;
         }
     }
 }

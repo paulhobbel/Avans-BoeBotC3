@@ -1,28 +1,38 @@
 package boebot;
-
 import java.util.ArrayList;
 
 /**
- * Write a description of interface Runnable here.
+ * abstract Class Updatable
+ * 
+ * Holds all the project updates so we can update them all at once.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 28-11-2017 (Version 1.0)
  */
 public abstract class Updatable
 {
     private static ArrayList<Updatable> updatables = new ArrayList();
     
+    /**
+     * Updatable Constructor
+     *
+     * adds a new updatable to the string updatebles
+     */
     public Updatable() {
         updatables.add(this);
     }
     
     /**
-     * The method that is run every ms.
+     * Method update
+     * 
+     * Letting all the updates update every millisecond
      */
     public abstract void update();
     
     /**
-     * Update all updatables
+     * Method update
+     * 
+     * Update all updatables that were added in the constructor with an for each loop
      */
     public static void updateAll() {
         for(int i = 0; i < updatables.size(); i++) {

@@ -17,21 +17,19 @@ import boebot.hardware.Ultrasone.UltrasoneListener;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Robot implements RemoteListener, UltrasoneListener {
-    private Command currentCommand; 
-    private int currentDistance;
-    
+public class Robot {
     private ArrayList<Thread> threads = new ArrayList();
     
     private StateContext context;
     private Transmission transmission;
     
     public Robot() {
-        this.context = new StateContext(new IdleState(), this);
+        this.context = new StateContext(this);
+        this.context.setState(new IdleState(this.context));
         this.transmission = new Transmission();
         
-        this.threads.add(new Thread(new Ultrasone(3, 2, this)));
-        this.threads.add(new Thread(new Remote(0, this)));
+        this.threads.add(new Thread(new Ultrasone(3, 2, this.context)));
+        this.threads.add(new Thread(new Remote(0, this.context)));
     }
     
     public void loop() {
@@ -43,17 +41,6 @@ public class Robot implements RemoteListener, UltrasoneListener {
             Updatable.updateAll();
             BoeBot.wait(1);
         }
-    }
-    
-    public Command getCurrentCommand() {
-        Command tempCommand = this.currentCommand;
-        this.currentCommand = Command.UNKNOWN;
-        
-        return tempCommand;
-    }
-    
-    public int getCurrentDistance() {
-        return this.currentDistance;
     }
     
     public StateContext getContext() {
@@ -72,9 +59,10 @@ public class Robot implements RemoteListener, UltrasoneListener {
      * 
      * @param command A command given by the remote.
      */
+    @Deprecated
     public void onCommandUpdate(Command command) {
-        if(this.currentCommand != command)
-            this.currentCommand = command;
+        //if(this.currentCommand != command)
+        //    this.currentCommand = command;
     }
     
     /**
@@ -85,7 +73,8 @@ public class Robot implements RemoteListener, UltrasoneListener {
      * 
      * @param distance Distance in centimeters.
      */
+    @Deprecated
     public void onDistanceUpdate(int distance) {
-        this.currentDistance = distance;
+        //this.currentDistance = distance;
     }
 }

@@ -8,9 +8,13 @@ package boebot;
  */
 public abstract class State
 {   
-    public void init() {
-        // Not gonna do anything now :P
+    protected StateContext context;
+    
+    public State(StateContext context) {
+        this.context = context;
     }
+    
+    public void init() { }
     
     public abstract void update(StateContext context);
 }

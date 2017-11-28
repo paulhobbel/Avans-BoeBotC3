@@ -23,24 +23,32 @@ public class Engine extends Updatable
     private int counter;
     private int targetSpeed = 0;
 
+    /**
+     * 
+     * Creates a new engine.
+     * 
+     *  @param pin Enter the pin number to which the servo is connected.
+     *  @param reverse Specify wheter the servo needs to be reversed. 
+     */
     public Engine(int pin, boolean reverse)
     {
         this.servo = new Servo(pin);
         this.reverse = reverse;
     }
 
+    /**
+     * 
+     * This method updates the engine. 
+     */
+    
     public void update() {
         if(this.currentCycles < this.amountOfCycles) {
 
             double speed = this.beginSpeed + this.currentCycles * this.speedPerCycle;
 
-            //System.out.println(speed);
             setSpeedInstant((int)speed);
 
-            //this.servo.update((int)speed);
-
             this.currentCycles++;
-            //System.out.println("speed: " + speed + "; currentCycles: " + this.currentCycles);
         }
         else
         {
@@ -49,49 +57,18 @@ public class Engine extends Updatable
             this.speedPerCycle = 0;
             this.currentCycles = 0;
         }
-
-        // if(this.targetSpeed != this.getSpeed()) {
-
-        // if(this.seq <= this.counter) {
-        // if(this.reverse) {
-        // this.servo.update(this.servo.getPulseWidth() + 2);
-        // } else {
-        // this.servo.update(this.servo.getPulseWidth() - 2);
-        // }
-        // this.counter = 0;
-        // }
-        // this.counter++;
-        // }
-        // if(this.currentCycles < this.amountOfCycles) {
-        // this.currentCycles++;
-        // int speed = this.beginSpeed + (int)Math.round(this.currentCycles * speedPerCycle);
-        // if(this.reverse) {
-        // this.servo.update(1500 + speed * 2);
-        // } else {
-        // this.servo.update(1500 - speed * 2);
-        // }
-        // }
     }
 
     /**
-     * Immediately rotate the servo at the desired speed
-     * @param   speed   the speed between -100 and 100 (0 is standing still)
+     * Sets the servo to the targeted speed in the amount of time given by the user.
+     * 
+     * @param target Targeted speed which the servo's must reach.
+     * @param time Time given by the user. In this amount of time the servo's must reach the target speed.
      */
     public void setSpeed(int target, int time)
     {
         if(!(target >= -100 && target <= 100 && time > 0))
             throw new Error("Parameter out of bounds");
-
-        // int difference = target - this.getSpeed();
-        // this.seq = Math.abs(time/difference);
-        // this.targetSpeed = target;
-        // double difference = speed - this.getSpeed();
-        // System.out.println(difference);
-        // if(difference != 0) {
-        // this.amountOfCycles = time;
-        // this.speedPerCycle = difference / this.amountOfCycles;
-        // this.currentCycles = 0;
-        // }
 
         this.beginSpeed = this.getSpeed();
 
@@ -104,6 +81,11 @@ public class Engine extends Updatable
         System.out.println("amountOfCycles: " + this.amountOfCycles + "; speedPerCycle: " + this.speedPerCycle + "; currentCycles: " + this.currentCycles + "; difference: " + difference + "; beginSpeed: " + beginSpeed);
     }
 
+    /**
+     * Instantly sets a speed that must be constantly driven.
+     * 
+     * @param speed Set a speed between -100 and 100 (0 is standing still).
+     */
     public void setSpeedInstant(int speed)
     {
         if(!(speed >= -100 && speed <= 100))
@@ -116,6 +98,7 @@ public class Engine extends Updatable
 
     /**
      * Returns the current speed of the servo motor.
+     * 
      * @return  the current speed between -100 and 100 (0 is standing still)
      */
     public int getSpeed()
@@ -127,7 +110,7 @@ public class Engine extends Updatable
     }
 
     /**
-     * Immediately stops the engine
+     * Immediately stops the engine.
      */
     public void emergencyBrake()
     {

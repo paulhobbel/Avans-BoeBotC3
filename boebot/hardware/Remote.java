@@ -32,7 +32,7 @@ public class Remote implements Runnable
                     lengths[i] = BoeBot.pulseIn(this.pin, false, 20000);
                 this.listener.onCommandUpdate(this.convertLengths(lengths));
             }
-            BoeBot.wait(100);
+            BoeBot.wait(10);
         }
     }
     

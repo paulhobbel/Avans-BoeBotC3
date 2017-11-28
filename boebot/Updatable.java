@@ -25,8 +25,8 @@ public abstract class Updatable
      * Update all updatables
      */
     public static void updateAll() {
-        for(Updatable updatable : updatables) {
-            updatable.update();
+        for(int i = 0; i < updatables.size(); i++) {
+            updatables.get(i).update();
         }
     }
 }

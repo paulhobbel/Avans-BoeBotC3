@@ -3,6 +3,7 @@ package boebot;
 import TI.*;
 
 import static boebot.Transmission.Speed.*;
+import boebot.output.LED.Color;
 
 /**
  * Write a description of class OverrideState here.
@@ -30,6 +31,7 @@ public class OverrideState extends State
         //if(!this.lastCommand.equals(Command.UNKNOWN)) {
         this.handleCommand(this.lastCommand);
         System.out.println("INIT");
+        this.context.setColor(Color.GREEN);
         //}
     }
 
@@ -56,7 +58,7 @@ public class OverrideState extends State
         System.out.println(command);
         switch(command) {
             case BREAK:
-            transmission.brake(SLOW);
+            transmission.brake(FAST);
             break;
 
             case FORWARDS:

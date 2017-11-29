@@ -34,11 +34,12 @@ public class LED
 
     public enum Color
     {
-        RED(255, 0, 0),
-        BLUE(0, 255, 0),
-        YELLOW(255, 255, 0),
-        GREEN(0, 255, 0),
-        ORANGE(255, 128, 0),
+        RED(120, 0, 0),
+        BLUE(0, 120, 0),
+        YELLOW(120, 120, 0),
+        GREEN(0, 120, 0),
+        ORANGE(120, 20, 0),
+        WHITE(120, 120, 120),
         ;
         int r;
         int g;

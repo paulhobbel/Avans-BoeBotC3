@@ -4,6 +4,7 @@ import boebot.hardware.Remote.RemoteListener;
 import boebot.hardware.Ultrasone.UltrasoneListener;
 
 import static boebot.Transmission.Speed.*;
+import boebot.output.LED.Color;
 
 /**
  * Write a description of class ColissionState here.
@@ -24,6 +25,7 @@ public class CollisionState extends State
         // transmission.forward(SLOW);
         // 
         this.context.getTransmission().brake(SLOW);
+        this.context.setColor(Color.ORANGE);
     }
 
     public void update(StateContext context) {

@@ -3,6 +3,8 @@ package boebot;
 import java.util.ArrayList;
 import boebot.hardware.Remote.RemoteListener;
 import boebot.hardware.Ultrasone.UltrasoneListener;
+import boebot.output.LED;
+import boebot.output.LED.Color;
 
 /**
  * Write a description of class StateContext here.
@@ -17,6 +19,8 @@ public class StateContext extends Updatable implements RemoteListener, Ultrasone
     private Robot robot;
     
     private Transmission transmission;
+    private LED led1;
+    private LED led2;
     
     private int distance;
     private Command command;
@@ -24,6 +28,8 @@ public class StateContext extends Updatable implements RemoteListener, Ultrasone
     public StateContext(Robot robot) {
         this.robot = robot;
         this.transmission = new Transmission();
+        this.led1 = new LED(0);
+        this.led2 = new LED(2);
     }
     
     public Transmission getTransmission() {
@@ -61,5 +67,10 @@ public class StateContext extends Updatable implements RemoteListener, Ultrasone
     
     public void onDistanceUpdate(int distance) {
         this.distance = distance;
+    }
+    
+    public void setColor(Color color) {
+        this.led1.turnOn(color);
+        this.led2.turnOn(color);
     }
 }

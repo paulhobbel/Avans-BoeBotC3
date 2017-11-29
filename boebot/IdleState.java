@@ -2,6 +2,7 @@ package boebot;
 
 import TI.*;
 import static boebot.Transmission.Speed.*;
+import boebot.output.LED.Color;
 
 /**
  * Write a description of class IdleState here.
@@ -24,6 +25,7 @@ public class IdleState extends State
     public void init() {
         this.switchTimer.mark();
         this.context.getTransmission().brake(SLOW);
+        this.context.setColor(Color.RED);
     }
     
     public void update(StateContext context) {

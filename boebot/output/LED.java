@@ -35,7 +35,7 @@ public class LED
     public enum Color
     {
         RED(120, 0, 0),
-        BLUE(0, 120, 0),
+        BLUE(0, 0, 120),
         YELLOW(120, 120, 0),
         GREEN(0, 120, 0),
         ORANGE(120, 20, 0),

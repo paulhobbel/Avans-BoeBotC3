@@ -1,9 +1,8 @@
 package boebot;
 
 import TI.*;
-
+import boebot.output.LED.*;
 import static boebot.Transmission.Speed.*;
-import boebot.output.LED.Color;
 
 /**
  * Write a description of class OverrideState here.
@@ -15,7 +14,6 @@ public class OverrideState extends State
 {
     private Command lastCommand = Command.UNKNOWN;
     private Timer switchTimer;
-
     private Transmission transmission;
 
     public OverrideState(StateContext context) {
@@ -39,7 +37,9 @@ public class OverrideState extends State
         if(context.hasCollision()) {
             context.setState(new CollisionState(context));
         }
-
+        if(this.lastCommand == Command.FIGURE_EIGHT){
+            context.setState(new StateEight(context));
+        }
         //Transmission transmission = context.getTransmission();
         if(this.lastCommand != context.getCommand()) {
             this.lastCommand = context.getCommand();
@@ -58,9 +58,9 @@ public class OverrideState extends State
         System.out.println(command);
         switch(command) {
             case BREAK:
-            transmission.brake(FAST);
+            transmission.brake(SLOW);
             break;
-
+            
             case FORWARDS:
             transmission.forwards(FAST);
             break;

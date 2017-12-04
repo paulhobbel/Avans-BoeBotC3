@@ -9,8 +9,8 @@ import boebot.output.LED.Color;
 /**
  * Write a description of class StateContext here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 05-12-2017 (Version 1.0)
  */
 public class StateContext extends Updatable implements RemoteListener, UltrasoneListener
 {
@@ -55,6 +55,11 @@ public class StateContext extends Updatable implements RemoteListener, Ultrasone
         this.currentState.update(this);
     }
     
+    /**
+     * Method goBack
+     *
+     * Let the BoeBot go back to the previous state it was in.
+     */
     public void goBack() {
         this.currentState = this.lastState;
         this.currentState.init();
@@ -65,10 +70,24 @@ public class StateContext extends Updatable implements RemoteListener, Ultrasone
         this.command = command;
     }
     
+    /**
+     * Method onDistanceUpdate
+     * 
+     * Updates the distance from the BoeBot to the wall.
+     *
+     * @param distance A parameter
+     */
     public void onDistanceUpdate(int distance) {
         this.distance = distance;
     }
     
+    /**
+     * Method setColor
+     *
+     * Gives a led the color you insert in this method.
+     *
+     * @param color A parameter
+     */
     public void setColor(Color color) {
         this.led1.turnOn(color);
         this.led2.turnOn(color);

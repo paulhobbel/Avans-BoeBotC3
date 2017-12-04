@@ -12,10 +12,10 @@ import boebot.hardware.Ultrasone;
 import boebot.hardware.Ultrasone.UltrasoneListener;
 
 /**
- * Write a description of class Main here.
+ * Class Robot.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 05-12-2017 (Version 1.0)
  */
 public class Robot {
     private ArrayList<Thread> threads = new ArrayList();

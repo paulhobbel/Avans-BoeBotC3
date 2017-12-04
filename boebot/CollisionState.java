@@ -7,19 +7,31 @@ import static boebot.Transmission.Speed.*;
 import boebot.output.LED.Color;
 
 /**
- * Write a description of class ColissionState here.
+ * Class ColissionState 
+ * 
+ * Stops the BoeBot in case of being too close too an object in
+ * front of it. 
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 05-12-2017 (Version 1.0)
  */
 public class CollisionState extends State
 {   
     Command lastCommand = Command.UNKNOWN;
 
+    /**
+     * CollisionState Constructor
+     *
+     * @param context A parameter
+     */
     public CollisionState(StateContext context) {
         super(context);
     }
 
+    /**
+     * Method init
+     *
+     */
     public void init() {
         // transmission.do(FORWARD, SLOW);
         // transmission.forward(SLOW);
@@ -28,6 +40,11 @@ public class CollisionState extends State
         this.context.setColor(Color.ORANGE);
     }
 
+    /**
+     * Method update
+     *
+     * @param context A parameter
+     */
     public void update(StateContext context) {
         if(!context.hasCollision()) {
             context.goBack();

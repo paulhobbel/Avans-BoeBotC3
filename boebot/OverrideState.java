@@ -7,8 +7,8 @@ import static boebot.Transmission.Speed.*;
 /**
  * Write a description of class OverrideState here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 05-12-2017 (Version 1.0)
  */
 public class OverrideState extends State
 {

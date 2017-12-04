@@ -7,8 +7,8 @@ import boebot.output.LED.Color;
 /**
  * Write a description of class IdleState here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 05-12-2017 (Version 1.0)
  */
 public class IdleState extends State
 {   

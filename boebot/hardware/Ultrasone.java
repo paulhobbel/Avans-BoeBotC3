@@ -8,7 +8,7 @@ import TI.*;
  * This Class has it own thread where it in runs so it won't slow the other processes down.
  *
  * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
- * @version 28-11-2017 (Version 1.0)
+ * @version 30-11-2017 (Version 1.0)
  */
 public class Ultrasone implements Runnable
 {

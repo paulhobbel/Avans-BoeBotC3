@@ -3,7 +3,12 @@ package boebot;
 import boebot.output.LED.*;
 import TI.*;
 import static boebot.Transmission.Speed.*;
-
+/**
+ * Write a description of class StateEight here.
+ *
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 05-12-2017 (Version 1.0)
+ */
 public class StateEight extends State{
     private Timer contextTimer;
     private int start;

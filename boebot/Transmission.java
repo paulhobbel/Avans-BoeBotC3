@@ -6,7 +6,7 @@ import boebot.hardware.Engine;
 /**
  * Communication with the motors for the other classes.
  *
- * @author Daan van Kempen C3
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
  * @version 18-11-2017
  */
 public class Transmission extends Updatable

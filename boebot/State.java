@@ -3,8 +3,8 @@ package boebot;
 /**
  * Abstract class State - write a description of the class here
  *
- * @author (your name here)
- * @version (version number or date here)
+ * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @version 05-12-2017 (Version 1.0)
  */
 public abstract class State
 {   

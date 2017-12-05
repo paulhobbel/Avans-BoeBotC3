@@ -6,20 +6,29 @@ import boebot.Command;
 /**
  * Write a description of class Remote here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Paul Hobbel
+ * @author Thomas Mandemaker
+ * @author Daan van Kempen
+ * @author Tim de Booij
+ * @author Nick Kerremans
+ * @author Boudewijn Groeneboer
+ * @version 05-12-2017
  */
-public class Remote implements Runnable
+public class Remote implements ListenerRunnable<Remote.RemoteEvent>
 {
     private int pin;
-    private RemoteListener listener;
+    private RemoteEvent listener;
+    
     /**
-     * Constructor for objects of class Remote
+     * Constructor for the Remote IR
      * 
-     */    
-    public Remote(int pin, RemoteListener listener)
-    {
+     * @param pin The pin the IR is connected on
+     */
+    public Remote(int pin) {
         this.pin = pin;
+    }
+    
+    public void setListener(RemoteEvent listener) {
         this.listener = listener;
     }
     
@@ -38,7 +47,10 @@ public class Remote implements Runnable
 
                 for(int i = 0; i < 12; i++)
                     lengths[i] = BoeBot.pulseIn(this.pin, false, 20000);
-                this.listener.onCommandUpdate(this.convertLengths(lengths));
+                
+                if(!this.listener.equals(null)) {
+                    this.listener.onCommand(this.convertLengths(lengths));
+                }
             }
             BoeBot.wait(10);
         }
@@ -68,13 +80,12 @@ public class Remote implements Runnable
         return Command.forCodeAndID(code, id);
     }
 
-    public interface RemoteListener
+    public interface RemoteEvent
     {
         /**
-         * Method onCommandUpdate
          * Recieves a command from run after it has been split appart in converLengths
          * @param command A parameter
          */
-        public void onCommandUpdate(Command command);
+        public void onCommand(Command command);
     }
 }

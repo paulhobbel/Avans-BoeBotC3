@@ -6,8 +6,9 @@ import boebot.Updatable;
 /**
  * A hardware class to interact with the servo motors. Only to be used by the class Transmission.
  *
- * @author Daan van Kempen C3
- * @version 18-11-2017
+ * @author Daan van Kempen
+ * @author Paul Hobbel
+ * @version 05-12-2017
  */
 public class Engine extends Updatable
 {
@@ -19,43 +20,33 @@ public class Engine extends Updatable
     private int currentCycles;
     private int beginSpeed;
 
-    private int seq;
-    private int counter;
-    private int targetSpeed = 0;
-
     /**
-     * 
      * Creates a new engine.
      * 
-     *  @param pin Enter the pin number to which the servo is connected.
-     *  @param reverse Specify wheter the servo needs to be reversed. 
+     * @param pin Enter the pin number to which the servo is connected.
+     * @param reverse Specify wheter the servo needs to be reversed. 
      */
     public Engine(int pin, boolean reverse)
     {
+        super(true); // Tells the Updatable not to automatically update!
+        
         this.servo = new Servo(pin);
         this.reverse = reverse;
     }
 
     /**
+     * This method updates the engine.
      * 
-     * This method updates the engine. 
+     * In here the speed will be increased with the said speedPerCycle.
+     * This will continue until the currentCycles reached the amountOfCycles limit.
      */
-    
     public void update() {
         if(this.currentCycles < this.amountOfCycles) {
-
             double speed = this.beginSpeed + this.currentCycles * this.speedPerCycle;
 
-            setSpeedInstant((int)speed);
+            this.setSpeed((int)Math.round(speed));
 
             this.currentCycles++;
-        }
-        else
-        {
-            this.beginSpeed = 0;
-            this.amountOfCycles = 0;
-            this.speedPerCycle = 0;
-            this.currentCycles = 0;
         }
     }
 
@@ -77,19 +68,21 @@ public class Engine extends Updatable
         this.speedPerCycle = (difference / time);
         this.amountOfCycles = time + 1;
         this.currentCycles = 1;
-
-        System.out.println("amountOfCycles: " + this.amountOfCycles + "; speedPerCycle: " + this.speedPerCycle + "; currentCycles: " + this.currentCycles + "; difference: " + difference + "; beginSpeed: " + beginSpeed);
     }
 
     /**
      * Instantly sets a speed that must be constantly driven.
+     * <p>
+     * NOTE: This function is for internal usage only,
+     * consider using {@link #setSpeed(int target, int time)} instead!
      * 
      * @param speed Set a speed between -100 and 100 (0 is standing still).
      */
-    public void setSpeedInstant(int speed)
+    public void setSpeed(int speed)
     {
         if(!(speed >= -100 && speed <= 100))
-            throw new Error("Parameter out of bounds");
+            throw new Error("Parameter out of bounds, please use a speed between -100 and 100");
+        
         if(!this.reverse)
             this.servo.update(1500 + speed * 2);
         else
@@ -99,7 +92,7 @@ public class Engine extends Updatable
     /**
      * Returns the current speed of the servo motor.
      * 
-     * @return  the current speed between -100 and 100 (0 is standing still)
+     * @return the current speed between -100 and 100 (0 is standing still)
      */
     public int getSpeed()
     {
@@ -107,13 +100,5 @@ public class Engine extends Updatable
             return (servo.getPulseWidth() - 1500) / 2;
         else
             return (servo.getPulseWidth() - 1500) / -2;
-    }
-
-    /**
-     * Immediately stops the engine.
-     */
-    public void emergencyBrake()
-    {
-        servo.update(1500);
     }
 }

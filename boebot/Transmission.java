@@ -6,19 +6,33 @@ import boebot.hardware.Engine;
 /**
  * Communication with the motors for the other classes.
  *
- * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
- * @version 18-11-2017
+ * @author Paul Hobbel
+ * @author Thomas Mandemaker
+ * @author Daan van Kempen
+ * @author Tim de Booij
+ * @author Nick Kerremans
+ * @author Boudewijn Groeneboer
+ * @version 05-12-2017
  */
 public class Transmission extends Updatable
 {
     private final double DEGREETIME = 5.7; //time it take for the BoeBot to turn 1 degree at 1600 speed
-    private Engine engineR = new Engine(15, false);
-    private Engine engineL = new Engine(14, true);
+    
+    private Engine engineLeft;
+    private Engine engineRight;
+    
+    public Transmission() {
+        super(true); // Tells the Updatable not to automatically update!
+        
+        this.engineLeft = new Engine(Constants.SERVO_LEFT_PIN, true);
+        this.engineRight = new Engine(Constants.SERVO_RIGHT_PIN, false);
+    }
+    
     /**
      * Makes the servo's go straight forwards.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void forwards(Speed speed) {
         this.speed(speed.getSpeed(), speed.getAcceleration());
@@ -27,8 +41,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's move backwards.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void backwards(Speed speed) {
         this.speed(-speed.getSpeed(), speed.getAcceleration());
@@ -37,8 +51,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's brake from the current speed to zero.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void brake(Speed speed) {
         this.emergencyBrake(speed.getAcceleration());
@@ -47,8 +61,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's move to the right with a given speed.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void right(Speed speed) {
         this.turnSpeed(speed.getSpeed(), speed.getAcceleration());
@@ -57,8 +71,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's move to the left with a given speed.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void left(Speed speed) {
         this.turnSpeed(-speed.getSpeed(), speed.getAcceleration());
@@ -67,8 +81,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's move to the right with a given speed and also makes a curve.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void curveRightForwards(Speed speed) {
         this.curve(speed.getSpeedSlow(), speed.getSpeedFast(), speed.getAcceleration());
@@ -77,8 +91,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's move to the left with a given speed and also makes a curve.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void curveLeftForwards(Speed speed) {
         this.curve(speed.getSpeedFast(), speed.getSpeedSlow(), speed.getAcceleration());
@@ -87,8 +101,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's move to the right with a given speed and also makes a curve.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void curveRightBackwards(Speed speed) {
         this.curve(-speed.getSpeedSlow(), -speed.getSpeedFast(), speed.getAcceleration());
@@ -97,8 +111,8 @@ public class Transmission extends Updatable
     /**
      * Makes the servo's move to the left with a given speed and also makes a curve.
      * 
-     * @see #Speed for more info.
      * @param speed The speed constant.
+     * @see Transmission.Speed
      */
     public void curveLeftBackwards(Speed speed) {
         this.curve(-speed.getSpeedFast(), -speed.getSpeedSlow(), speed.getAcceleration());
@@ -106,10 +120,13 @@ public class Transmission extends Updatable
     
     /**
      * Updates the right and left engines.
+     * 
+     * This is manually since Engine will not be added
+     * to the global updatables
      */
     public void update() {
-        this.engineR.update();
-        this.engineL.update();
+        this.engineRight.update();
+        this.engineLeft.update();
     }
     
     /**
@@ -120,8 +137,8 @@ public class Transmission extends Updatable
      */
     private void speed(int speed, int time)
     {
-        engineR.setSpeed(speed, time);
-        engineL.setSpeed(speed, time);
+        this.engineRight.setSpeed(speed, time);
+        this.engineLeft.setSpeed(speed, time);
     }
     
     /**
@@ -147,8 +164,8 @@ public class Transmission extends Updatable
      */
     private void turnSpeed(int speed, int time)
     {
-        engineR.setSpeed(speed, time);
-        engineL.setSpeed(-speed, time);
+        this.engineRight.setSpeed(speed, time);
+        this.engineLeft.setSpeed(-speed, time);
     }
     
     /**
@@ -160,8 +177,8 @@ public class Transmission extends Updatable
      */
     private void curve(int speedL, int speedR, int time)
     {
-        engineL.setSpeed(speedL, time);
-        engineR.setSpeed(speedR, time);
+        this.engineLeft.setSpeed(speedL, time);
+        this.engineRight.setSpeed(speedR, time);
     }
 
     /**
@@ -171,8 +188,8 @@ public class Transmission extends Updatable
      */
     private void emergencyBrake(int time)
     {
-        engineR.setSpeed(0, time);
-        engineL.setSpeed(0, time);
+        this.engineRight.setSpeed(0, time);
+        this.engineLeft.setSpeed(0, time);
     }
 
     /**
@@ -244,5 +261,9 @@ public class Transmission extends Updatable
         public int getAcceleration() {
             return this.acceleration;
         }
+    }
+    
+    public enum TransmissionState {
+        
     }
 }

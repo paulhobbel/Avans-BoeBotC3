@@ -1,10 +1,12 @@
 package boebot;
 
-import boebot.hardware.Remote.RemoteListener;
-import boebot.hardware.Ultrasone.UltrasoneListener;
+import java.awt.Color;
+
+import boebot.hardware.Remote.RemoteEvent;
+import boebot.hardware.Ultrasone.UltrasoneEvent;
 
 import static boebot.Transmission.Speed.*;
-import boebot.output.LED.Color;
+//import boebot.output.LED.Color;
 
 /**
  * Class ColissionState 
@@ -12,32 +14,60 @@ import boebot.output.LED.Color;
  * Stops the BoeBot in case of being too close too an object in
  * front of it. 
  *
- * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @author Paul Hobbel
+ * @author Thomas Mandemaker
+ * @author Daan van Kempen
+ * @author Tim de Booij
+ * @author Nick Kerremans
+ * @author Boudewijn Groeneboer
  * @version 05-12-2017 (Version 1.0)
  */
 public class CollisionState extends State
-{   
-    Command lastCommand = Command.UNKNOWN;
+{
+    Transmission transmission;
 
     /**
      * CollisionState Constructor
-     *
-     * @param context A parameter
      */
-    public CollisionState(StateContext context) {
-        super(context);
+    public CollisionState() {
+        this.transmission = new Transmission();
     }
 
     /**
      * Method init
      *
      */
-    public void init() {
-        // transmission.do(FORWARD, SLOW);
-        // transmission.forward(SLOW);
-        // 
-        this.context.getTransmission().brake(SLOW);
-        this.context.setColor(Color.ORANGE);
+    public void init(StateContext context) {
+        // Set the color of this state
+        context.setColor(Color.ORANGE);
+        
+        // Change the listener of the ultrasone module
+        context.setUltrasoneListener(new UltrasoneEvent()
+            {
+                @Override
+                public void onDistance(int distance) {
+                    if(distance != -1 && distance > Constants.COLLISION_DISTANCE) {
+                        context.goBack();
+                    }
+                }
+            }
+        );
+        
+        // Change the listener of the remote IR
+        context.setRemoteListener(new RemoteEvent()
+            {
+                @Override
+                public void onCommand(Command command) {
+                    if(command.equals(Command.STANDBY)) {
+                        context.setState(new IdleState());
+                    } else {
+                        handleCommand(command);
+                    }
+                }
+            }
+        );
+        
+        this.transmission.brake(SLOW);
     }
 
     /**
@@ -45,41 +75,38 @@ public class CollisionState extends State
      *
      * @param context A parameter
      */
+    @Override
     public void update(StateContext context) {
-        if(!context.hasCollision()) {
-            context.goBack();
-        }
+        // We update our transmission manually per state
+        this.transmission.update();
+    }
 
-        if(this.lastCommand != context.getCommand()) {
-            this.lastCommand = context.getCommand();
+    private void handleCommand(Command command) {
+        switch(command) {
+            case BREAK:
+            this.transmission.brake(SLOW);
+            break;
 
-            Transmission transmission = context.getTransmission();
-            switch(this.lastCommand) {
-                case BREAK:
-                transmission.brake(SLOW);
-                break;
+            case BACKWARDS:
+            this.transmission.backwards(FAST);
+            break;
+            case BACKWARDS_CURVE_LEFT:
+            this.transmission.curveLeftBackwards(NORMAL_CURVE);
+            break;
+            case BACKWARDS_CURVE_RIGHT:
+            this.transmission.curveRightBackwards(NORMAL_CURVE);
+            break;
 
-                case BACKWARDS:
-                transmission.backwards(FAST);
-                break;
-                case BACKWARDS_CURVE_LEFT:
-                transmission.curveLeftBackwards(NORMAL_CURVE);
-                break;
-                case BACKWARDS_CURVE_RIGHT:
-                transmission.curveRightBackwards(NORMAL_CURVE);
-                break;
-
-                case RIGHT:
-                transmission.right(SLOW);
-                break;
-                case LEFT:
-                transmission.left(SLOW);
-                break;
-                case RIGHT_NINETY:
-                break;
-                case LEFT_NINETY:
-                break;
-            }
+            case RIGHT:
+            this.transmission.right(SLOW);
+            break;
+            case LEFT:
+            this.transmission.left(SLOW);
+            break;
+            case RIGHT_NINETY:
+            break;
+            case LEFT_NINETY:
+            break;
         }
     }
 }

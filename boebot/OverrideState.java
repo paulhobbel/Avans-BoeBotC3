@@ -1,91 +1,95 @@
 package boebot;
 
+import java.awt.Color;
 import TI.*;
-import boebot.output.LED.*;
+
+import boebot.hardware.Remote.RemoteEvent;
+import boebot.hardware.Ultrasone.UltrasoneEvent;
+
 import static boebot.Transmission.Speed.*;
 
 /**
  * Write a description of class OverrideState here.
  *
- * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @author Paul Hobbel
+ * @author Thomas Mandemaker
+ * @author Daan van Kempen
+ * @author Tim de Booij
+ * @author Nick Kerremans
+ * @author Boudewijn Groeneboer
  * @version 05-12-2017 (Version 1.0)
  */
 public class OverrideState extends State
 {
-    private Command lastCommand = Command.UNKNOWN;
-    private Timer switchTimer;
     private Transmission transmission;
 
-    public OverrideState(StateContext context) {
-        super(context);
-        //this.transmission = new Transmission();
-
-        this.switchTimer = new Timer(1000);
-        this.switchTimer.mark();
+    public OverrideState() {
+        this.transmission = new Transmission();
     }
 
-    public void init() {
-        this.switchTimer.mark();
-        //if(!this.lastCommand.equals(Command.UNKNOWN)) {
-        this.handleCommand(this.lastCommand);
-        System.out.println("INIT");
-        this.context.setColor(Color.GREEN);
-        //}
+    public void init(StateContext context) {
+        context.setColor(Color.GREEN);
+        
+        context.setUltrasoneListener(new UltrasoneEvent()
+        {
+            @Override
+            public void onDistance(int distance) {
+                if(distance != -1 && distance < Constants.COLLISION_DISTANCE) {
+                    context.setState(new CollisionState());
+                }
+            }
+        });
+        
+        context.setRemoteListener(new RemoteEvent()
+        {
+            @Override
+            public void onCommand(Command command) {
+                if(command.equals(Command.STANDBY)) {
+                    context.setState(new IdleState());
+                } else {
+                    handleCommand(command);
+                }
+            }
+        });
     }
 
     public void update(StateContext context) {
-        if(context.hasCollision()) {
-            context.setState(new CollisionState(context));
-        }
-        if(this.lastCommand == Command.FIGURE_EIGHT){
-            context.setState(new StateEight(context));
-        }
-        //Transmission transmission = context.getTransmission();
-        if(this.lastCommand != context.getCommand()) {
-            this.lastCommand = context.getCommand();
-            if(this.lastCommand == Command.STANDBY) {
-                if(this.switchTimer.timeout()) {
-                    context.setState(new IdleState(context));
-                }
-            } else {
-                this.handleCommand(this.lastCommand);
-            }
-        }
+        // We update our transmission manually per state
+        this.transmission.update();
     }
 
-    private void handleCommand(Command command) {
-        Transmission transmission = this.context.getTransmission();
+    public void handleCommand(Command command) {
         System.out.println(command);
         switch(command) {
             case BREAK:
-            transmission.brake(SLOW);
+            this.transmission.brake(SLOW);
             break;
             
             case FORWARDS:
-            transmission.forwards(FAST);
+            this.transmission.forwards(FAST);
             break;
             case FORWARDS_CURVE_LEFT:
-            transmission.curveLeftForwards(NORMAL_CURVE);
+            this.transmission.curveLeftForwards(NORMAL_CURVE);
             break;
             case FORWARDS_CURVE_RIGHT:
-            transmission.curveRightForwards(NORMAL_CURVE);
+            this.transmission.curveRightForwards(NORMAL_CURVE);
             break;
 
             case BACKWARDS:
-            transmission.backwards(FAST);
+            this.transmission.backwards(FAST);
             break;
             case BACKWARDS_CURVE_LEFT:
-            transmission.curveLeftBackwards(NORMAL_CURVE);
+            this.transmission.curveLeftBackwards(NORMAL_CURVE);
             break;
             case BACKWARDS_CURVE_RIGHT:
-            transmission.curveRightBackwards(NORMAL_CURVE);
+            this.transmission.curveRightBackwards(NORMAL_CURVE);
             break;
 
             case RIGHT:
-            transmission.right(SLOW);
+            this.transmission.right(SLOW);
             break;
             case LEFT:
-            transmission.left(SLOW);
+            this.transmission.left(SLOW);
             break;
             case RIGHT_NINETY:
             break;

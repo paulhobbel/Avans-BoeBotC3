@@ -22,6 +22,12 @@ public abstract class Updatable
         updatables.add(this);
     }
     
+    public Updatable(boolean override) {
+        if(!override) {
+            updatables.add(this);
+        }
+    }
+    
     /**
      * Method update
      * 

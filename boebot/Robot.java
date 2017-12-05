@@ -1,35 +1,41 @@
 package boebot;
 
-import java.util.ArrayList;
 import TI.*;
+import java.util.ArrayList;
 
-import boebot.*;
-import boebot.output.*;
-
+import boebot.hardware.ListenerRunnable;
 import boebot.hardware.Remote;
-import boebot.hardware.Remote.RemoteListener;
+import boebot.hardware.Remote.RemoteEvent;
 import boebot.hardware.Ultrasone;
-import boebot.hardware.Ultrasone.UltrasoneListener;
+import boebot.hardware.Ultrasone.UltrasoneEvent;
 
 /**
  * Class Robot.
  *
- * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
+ * @author Paul Hobbel
+ * @author Thomas Mandemaker
+ * @author Daan van Kempen
+ * @author Tim de Booij
+ * @author Nick Kerremans
+ * @author Boudewijn Groeneboer
  * @version 05-12-2017 (Version 1.0)
  */
 public class Robot {
-    private ArrayList<Thread> threads = new ArrayList();
+    private ArrayList<Thread> threads = new ArrayList<>();
     
     private StateContext context;
-    private Transmission transmission;
+    
+    private ListenerRunnable<RemoteEvent> remote;
+    private ListenerRunnable<UltrasoneEvent> ultrasone;
     
     public Robot() {
-        this.context = new StateContext(this);
-        this.context.setState(new IdleState(this.context));
-        this.transmission = new Transmission();
+        this.context = new StateContext(this, new IdleState());
         
-        this.threads.add(new Thread(new Ultrasone(3, 2, this.context)));
-        this.threads.add(new Thread(new Remote(0, this.context)));
+        this.remote = new Remote(Constants.REMOTE_PIN);
+        this.ultrasone = new Ultrasone(Constants.ULTRASONE_TRIGGER_PIN, Constants.ULTRASONE_ECHO_PIN);
+        
+        this.threads.add(new Thread(this.ultrasone));
+        this.threads.add(new Thread(this.remote));
     }
     
     public void loop() {
@@ -47,8 +53,12 @@ public class Robot {
         return this.context;
     }
     
-    public Transmission getTransmission() {
-        return this.transmission;
+    public ListenerRunnable<RemoteEvent> getRemote() {
+        return this.remote;
+    }
+    
+    public ListenerRunnable<UltrasoneEvent> getUltrasone() {
+        return this.ultrasone;
     }
     
     /**

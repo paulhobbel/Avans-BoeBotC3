@@ -2,19 +2,24 @@ package boebot.hardware;
 import TI.*;
 
 /**
- * Class Ultrasone
+ * A hardware class to interact with the Ultrasone module
  * 
- * Let the Ultrasone constant determine what the distance is from the BoeBot to the clossest object in front of it.
- * This Class has it own thread where it in runs so it won't slow the other processes down.
+ * Let the Ultrasone module constantly determine what the distance is to the clossest object in front of the BoeBot.
+ * This class runs in it's own thread so it won't slow the other processes down.
  *
- * @author Paul, Thomas, Daan, Tim, Nick & Boudewijn
- * @version 30-11-2017 (Version 1.0)
+ * @author Paul Hobbel
+ * @author Thomas Mandemaker
+ * @author Daan van Kempen
+ * @author Tim de Booij
+ * @author Nick Kerremans
+ * @author Boudewijn Groeneboer
+ * @version 05-12-2017 (Version 1.0)
  */
-public class Ultrasone implements Runnable
+public class Ultrasone implements ListenerRunnable<Ultrasone.UltrasoneEvent>
 {
     private int pinTrigger;
     private int pinEcho;
-    private UltrasoneListener listener;
+    private UltrasoneEvent listener;
 
     /**
      * Ultrasone Constructor
@@ -25,18 +30,19 @@ public class Ultrasone implements Runnable
      * 
      * @param pinTrigger A parameter
      * @param pinEcho A parameter
-     * @param listener A parameter
      */
-    public Ultrasone(int pinTrigger, int pinEcho, UltrasoneListener listener) {
+    public Ultrasone(int pinTrigger, int pinEcho) {
         this.pinTrigger = pinTrigger;
         this.pinEcho = pinEcho;
+    }
+    
+    public void setListener(UltrasoneEvent listener) {
         this.listener = listener;
     }
     
     /**
-     * Method run
-     *
-     * While there's an object of Ultrasone this will run and makes sure the BoeBot will see any objects in front of them
+     * This method is called by the thread running this Runnable.
+     * 
      * This method makes sure that the ultrasound sensor sends a tone out and waits until it returns. 
      * With the length the tone is gone we can calculate the distance to the object infront of the BoeBot.
      */
@@ -49,9 +55,10 @@ public class Ultrasone implements Runnable
             int pulse = BoeBot.pulseIn(this.pinEcho, false, 10000);
             if(pulse >= 0) {
                 int distance = (10000 - pulse) / 57;
-                this.listener.onDistanceUpdate(distance);
-            } else {
-                this.listener.onDistanceUpdate(-1);
+                
+                if(!this.listener.equals(null)) {
+                    this.listener.onDistance(distance);
+                }
             }
             
             BoeBot.wait(50);
@@ -59,13 +66,16 @@ public class Ultrasone implements Runnable
     }
     
     
-    
     /**
      * Interface UltrasoneListener
      *
      * Sends the distance to the updater so you can check if the BoeBot is too close to an object.
      */
-    public interface UltrasoneListener {
-        public void onDistanceUpdate(int distance);
+    public interface UltrasoneEvent {
+        /**
+         * 
+         * @param distance The current distance
+         */
+        public void onDistance(int distance);
     }
 }

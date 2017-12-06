@@ -62,7 +62,7 @@ public class OverrideState extends State
         System.out.println(command);
         switch(command) {
             case BREAK:
-            this.transmission.brake(SLOW);
+            this.transmission.brake(FAST);
             break;
             
             case FORWARDS:

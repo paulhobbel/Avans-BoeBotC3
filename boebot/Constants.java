@@ -1,5 +1,7 @@
 package boebot;
 
+import boebot.hardware.Engine;
+
 /**
  * 
  *
@@ -22,6 +24,9 @@ public class Constants
      * The pin of the right servo
      */
     public static final int SERVO_RIGHT_PIN = 15;
+    
+    public static final Engine ENGINE_LEFT = new Engine(SERVO_LEFT_PIN, true);
+    public static final Engine ENGINE_RIGHT = new Engine(SERVO_RIGHT_PIN, false);
     
     
     /**

@@ -17,17 +17,17 @@ import boebot.hardware.Engine;
 public class Transmission extends Updatable
 {
     private final double DEGREETIME = 5.7; //time it take for the BoeBot to turn 1 degree at 1600 speed
-    
-    private Engine engineLeft;
-    private Engine engineRight;
-    
+
+    private EngineWrapper engineLeft;
+    private EngineWrapper engineRight;
+
     public Transmission() {
         super(true); // Tells the Updatable not to automatically update!
-        
-        this.engineLeft = new Engine(Constants.SERVO_LEFT_PIN, true);
-        this.engineRight = new Engine(Constants.SERVO_RIGHT_PIN, false);
+
+        this.engineLeft = new EngineWrapper(Constants.ENGINE_LEFT);
+        this.engineRight = new EngineWrapper(Constants.ENGINE_RIGHT);
     }
-    
+
     /**
      * Makes the servo's go straight forwards.
      * 
@@ -37,7 +37,7 @@ public class Transmission extends Updatable
     public void forwards(Speed speed) {
         this.speed(speed.getSpeed(), speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's move backwards.
      * 
@@ -47,7 +47,7 @@ public class Transmission extends Updatable
     public void backwards(Speed speed) {
         this.speed(-speed.getSpeed(), speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's brake from the current speed to zero.
      * 
@@ -57,7 +57,7 @@ public class Transmission extends Updatable
     public void brake(Speed speed) {
         this.emergencyBrake(speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's move to the right with a given speed.
      * 
@@ -67,7 +67,7 @@ public class Transmission extends Updatable
     public void right(Speed speed) {
         this.turnSpeed(speed.getSpeed(), speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's move to the left with a given speed.
      * 
@@ -77,7 +77,7 @@ public class Transmission extends Updatable
     public void left(Speed speed) {
         this.turnSpeed(-speed.getSpeed(), speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's move to the right with a given speed and also makes a curve.
      * 
@@ -87,7 +87,7 @@ public class Transmission extends Updatable
     public void curveRightForwards(Speed speed) {
         this.curve(speed.getSpeedSlow(), speed.getSpeedFast(), speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's move to the left with a given speed and also makes a curve.
      * 
@@ -97,7 +97,7 @@ public class Transmission extends Updatable
     public void curveLeftForwards(Speed speed) {
         this.curve(speed.getSpeedFast(), speed.getSpeedSlow(), speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's move to the right with a given speed and also makes a curve.
      * 
@@ -107,7 +107,7 @@ public class Transmission extends Updatable
     public void curveRightBackwards(Speed speed) {
         this.curve(-speed.getSpeedSlow(), -speed.getSpeedFast(), speed.getAcceleration());
     }
-    
+
     /**
      * Makes the servo's move to the left with a given speed and also makes a curve.
      * 
@@ -117,7 +117,7 @@ public class Transmission extends Updatable
     public void curveLeftBackwards(Speed speed) {
         this.curve(-speed.getSpeedFast(), -speed.getSpeedSlow(), speed.getAcceleration());
     }
-    
+
     /**
      * Updates the right and left engines.
      * 
@@ -128,7 +128,7 @@ public class Transmission extends Updatable
         this.engineRight.update();
         this.engineLeft.update();
     }
-    
+
     /**
      * Drive to the given speed in the given amount of time.
      * 
@@ -140,7 +140,7 @@ public class Transmission extends Updatable
         this.engineRight.setSpeed(speed, time);
         this.engineLeft.setSpeed(speed, time);
     }
-    
+
     /**
      * BROKEN!!!
      * Immediately turn at the desired speed around the center point of the axis at speed 50 for a chosen amount of degrees 
@@ -167,7 +167,7 @@ public class Transmission extends Updatable
         this.engineRight.setSpeed(speed, time);
         this.engineLeft.setSpeed(-speed, time);
     }
-    
+
     /**
      * Make a curve with a given speed in a given amount of time.
      * 
@@ -198,18 +198,22 @@ public class Transmission extends Updatable
     public enum Speed
     {
         FAST(100, 500),
+
         MEDIUM(50, 250),
+
         SLOW(25, 100),
-        
+
         TIGHT_CURVE(5, 75, 200),
+
         NORMAL_CURVE(15, 75, 200),
+
         LOOSE_CURVE(30, 75, 200);
-        
+
         private int speed;
         private int speedSlow;
         private int speedFast;
         private int acceleration;
-        
+
         /**
          * The given speed by a user which should be reached with a constant acceleration.
          *
@@ -220,7 +224,7 @@ public class Transmission extends Updatable
             this.speed = speed;
             this.acceleration = acceleration;
         }
-        
+
         /**
          * The given speed by a user which should be reached with a constant acceleration.
          *
@@ -233,28 +237,28 @@ public class Transmission extends Updatable
             this.speedFast = speedFast;
             this.acceleration = acceleration;
         }
-        
+
         /**
          * Get the current speed from the servo's.
          */
         public int getSpeed() {
             return this.speed;
         }
-        
+
         /**
          * Get the current slow speed from the servo's.
          */
         public int getSpeedSlow() {
             return this.speedSlow;
         }
-        
+
         /**
          * Get the current fast speed from the servo's.
          */
         public int getSpeedFast() {
             return this.speedFast;
         }
-        
+
         /**
          * Get the current acceleration from the servo's.
          */
@@ -262,8 +266,56 @@ public class Transmission extends Updatable
             return this.acceleration;
         }
     }
-    
-    public enum TransmissionState {
-        
+
+    public class EngineWrapper extends Updatable {
+        private Engine engine;
+
+        private int amountOfCycles;
+        private double speedPerCycle;
+        private int currentCycles;
+        private int beginSpeed;
+
+        private int targetSpeed;
+
+        public EngineWrapper(Engine engine) {
+            super(true);
+
+            this.engine = engine;
+        }
+
+        /**
+         * Sets the servo to the targeted speed in the amount of time given by the user.
+         * 
+         * @param target Targeted speed which the servo's must reach.
+         * @param time Time given by the user. In this amount of time the servo's must reach the target speed.
+         */
+        public void setSpeed(int target, int time)
+        {
+            if(!(target >= -100 && target <= 100 && time > 0))
+                throw new Error("Parameter out of bounds");
+
+            this.beginSpeed = this.engine.getSpeed();
+
+            double difference = target - this.beginSpeed;
+
+            this.speedPerCycle = (difference / time);
+            this.amountOfCycles = time + 1;
+            this.currentCycles = 1;
+            this.targetSpeed = target;
+        }
+
+        public void update() {
+            if(this.currentCycles < this.amountOfCycles) {
+                double speed = this.beginSpeed + this.currentCycles * this.speedPerCycle;
+
+                
+                this.engine.setSpeed((int)Math.round(speed));
+                this.currentCycles++;
+
+            } else if(this.engine.getSpeed() != this.targetSpeed) {
+                this.setSpeed(this.targetSpeed, this.amountOfCycles - 1);
+            }
+
+        }
     }
 }

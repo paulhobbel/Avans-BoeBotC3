@@ -48,7 +48,7 @@ public class Remote implements ListenerRunnable<Remote.RemoteEvent>
                 for(int i = 0; i < 12; i++)
                     lengths[i] = BoeBot.pulseIn(this.pin, false, 20000);
                 
-                if(!this.listener.equals(null)) {
+                if(this.listener != null) {
                     this.listener.onCommand(this.convertLengths(lengths));
                 }
             }

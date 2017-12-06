@@ -8,6 +8,7 @@ import boebot.hardware.Remote;
 import boebot.hardware.Remote.RemoteEvent;
 import boebot.hardware.Ultrasone;
 import boebot.hardware.Ultrasone.UltrasoneEvent;
+import boebot.hardware.Bluetooth;
 
 /**
  * Class Robot.
@@ -29,13 +30,14 @@ public class Robot {
     private ListenerRunnable<UltrasoneEvent> ultrasone;
     
     public Robot() {
-        this.context = new StateContext(this, new IdleState());
-        
         this.remote = new Remote(Constants.REMOTE_PIN);
         this.ultrasone = new Ultrasone(Constants.ULTRASONE_TRIGGER_PIN, Constants.ULTRASONE_ECHO_PIN);
+        new Bluetooth();
         
         this.threads.add(new Thread(this.ultrasone));
         this.threads.add(new Thread(this.remote));
+        
+        this.context = new StateContext(this, new IdleState());
     }
     
     public void loop() {
@@ -74,6 +76,7 @@ public class Robot {
         //if(this.currentCommand != command)
         //    this.currentCommand = command;
     }
+    
     
     /**
      * Callback of UltrasoneListener

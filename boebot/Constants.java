@@ -1,5 +1,16 @@
 package boebot;
 
+/**
+ * 
+ *
+ * @author Paul Hobbel
+ * @author Thomas Mandemaker
+ * @author Daan van Kempen
+ * @author Tim de Booij
+ * @author Nick Kerremans
+ * @author Boudewijn Groeneboer
+ * @version 06-12-2017
+ */
 public class Constants
 {
     /**

@@ -82,7 +82,7 @@ public class StateContext extends Updatable
     }
     
     public void update() {
-        this.currentState.update(this);
+        //this.currentState.update(this);
         
         // The first item in the state history is the most recent one
         // thats why we take index 0 since that is the first item in the list
@@ -113,12 +113,12 @@ public class StateContext extends Updatable
      * @param color A parameter
      */
     public void setColor(Color color) {
-        this.led1.turnOn(color);
-        this.led2.turnOn(color);
+        this.led1.turnOn(color, 0.1f);
+        this.led2.turnOn(color, 0.1f);
     }
     
-    public void setColor(Color color, int alpha) {
-        this.led1.turnOn(color, alpha);
-        this.led2.turnOn(color, alpha);
+    public void setColor(Color color, float brightness) {
+        this.led1.turnOn(color, brightness);
+        this.led2.turnOn(color, brightness);
     }
 }

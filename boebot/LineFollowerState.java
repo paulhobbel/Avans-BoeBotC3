@@ -68,8 +68,8 @@ public class LineFollowerState extends State {
         setSpeedLeft(Constants.TP - this.turn);
         setSpeedRight(Constants.TP + this.turn);
 
-        this.engineLeft.update();
-        this.engineRight.update();
+        // this.engineLeft.update();
+        // this.engineRight.update();
     }
 
     public int getError(int lightSensorLeft, int lightSensorMiddle, int lightSensorRight) {
@@ -85,7 +85,7 @@ public class LineFollowerState extends State {
         int time = (int)(Math.abs(engineLeft.getSpeed()-speed)*Constants.ACCELERATION);
         if(time < 1)
             time = 1;
-        this.engineLeft.setSpeed(speed, time);
+        this.engineLeft.setSpeed(speed);
     }
 
     public void setSpeedRight(int speed) {
@@ -97,6 +97,6 @@ public class LineFollowerState extends State {
         int time = (int)(Math.abs(engineLeft.getSpeed()-speed)*Constants.ACCELERATION);
         if(time < 1)
             time = 1;
-        this.engineRight.setSpeed(speed, time);
+        this.engineRight.setSpeed(speed);
     }
 }

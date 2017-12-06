@@ -87,9 +87,14 @@ public class Constants
     public static final int TP = 70;
     
     /**
-     * Linefollower constant: dampning the integral
+     * Linefollower constant: Dampning the integral
      */
     public static final double DAMP = 0.8;
+    
+    /**
+     * Linefollower constant: Acceleration of the Engines. 0 is none. 
+     */
+    public static final double ACCELERATION = 0;
     
     /**
      * Light value of a white surface

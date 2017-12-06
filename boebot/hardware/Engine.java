@@ -19,6 +19,9 @@ public class Engine extends Updatable
     private double speedPerCycle;
     private int currentCycles;
     private int beginSpeed;
+    
+    private double currentSpeed = 0;
+    private int targetSpeed;
 
     /**
      * Creates a new engine.
@@ -41,13 +44,22 @@ public class Engine extends Updatable
      * This will continue until the currentCycles reached the amountOfCycles limit.
      */
     public void update() {
+        
         if(this.currentCycles < this.amountOfCycles) {
-            double speed = this.beginSpeed + this.currentCycles * this.speedPerCycle;
+            this.currentSpeed = this.beginSpeed + this.currentCycles * this.speedPerCycle;
 
-            this.setSpeed((int)Math.round(speed));
+            //this.setSpeed((int)Math.round(currentSpeed));
 
             this.currentCycles++;
+            System.out.println("Sir, moving on...");
+        } else if(this.getSpeed() != this.targetSpeed) {
+            System.out.println("Sir, we got an issue!");
+            this.currentCycles = 1;
         }
+        System.out.println(this.getSpeed());
+        System.out.println(this.targetSpeed);
+        System.out.println(this.getSpeed() < this.targetSpeed);
+        this.setSpeed((int)Math.round(currentSpeed));
     }
 
     /**
@@ -68,6 +80,7 @@ public class Engine extends Updatable
         this.speedPerCycle = (difference / time);
         this.amountOfCycles = time + 1;
         this.currentCycles = 1;
+        this.targetSpeed = target;
     }
 
     /**

@@ -36,31 +36,32 @@ public class LED
      * @since 0.1
      */
     public void turnOn(int red, int green, int blue) {
-        this.turnOn(red, green, blue, 255);
+        this.turnOn(red , green, blue, 255);
     }
     
     /**
      * Turns on a LED on the BoeBot board by giving the RGBA values.
      * 
-     * @param red   The red value
-     * @param green The green value
-     * @param blue  The blue value
-     * @param alpha The alpha value
+     * @param red        The red value
+     * @param green      The green value
+     * @param blue       The blue value
+     * @param brightness The brightness value
      * @since 0.2
      */
-    public void turnOn(int red, int green, int blue, int alpha) {
-        this.turnOn(new Color(red, green, blue, alpha));
+    public void turnOn(int red, int green, int blue, float brightness) {
+        Color convertedColor = this.convertRGBtoRGBA(new Color(red, green, blue), brightness);
+        this.turnOn(convertedColor);
     }
 
     /**
      * Turns on a LED on the BoeBot board by giving an awt Color and alpha value.
      * 
-     * @param color An instance of awt Color
-     * @param alpha The alpha value
+     * @param color         An instance of awt Color
+     * @param brightness    The brightness value
      * @since 0.2
      */
-    public void turnOn(Color color, int alpha) {
-        Color convertedColor = this.convertRGBtoRGBA(color, alpha);
+    public void turnOn(Color color, float brightness) {
+        Color convertedColor = this.convertRGBtoRGBA(color, brightness);
         this.turnOn(convertedColor);
     }
     
@@ -71,7 +72,7 @@ public class LED
      * @since 0.1
      */
     public void turnOn(Color color) {
-        BoeBot.rgbSet(this.place, 255-color.getRed(), 255-color.getGreen(), 255-color.getBlue());
+        BoeBot.rgbSet(this.place, color);
         BoeBot.rgbShow();
     }
     
@@ -88,8 +89,11 @@ public class LED
      * Converts a regular Color into a Color with an alpha value
      * @since 0.2
      */
-    private Color convertRGBtoRGBA(Color color, int alpha) {
-        return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    private Color convertRGBtoRGBA(Color color, float brightness) {
+        //return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+        float[] hsbVals = new float[3];
+        Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsbVals);
+        return Color.getHSBColor(hsbVals[0], hsbVals[1], brightness);
     }
     // public enum Color
     // {

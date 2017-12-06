@@ -56,7 +56,7 @@ public class Ultrasone implements ListenerRunnable<Ultrasone.UltrasoneEvent>
             if(pulse >= 0) {
                 int distance = (10000 - pulse) / 57;
                 
-                if(!this.listener.equals(null)) {
+                if(this.listener != null) {
                     this.listener.onDistance(distance);
                 }
             }

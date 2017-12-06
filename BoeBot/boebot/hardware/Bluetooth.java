@@ -2,6 +2,7 @@ package boebot.hardware;
 
 import TI.*;
 import boebot.Updatable;
+import boebot.Command;
 
 /**
  * Write a description of class Bluetooth here.
@@ -17,16 +18,32 @@ import boebot.Updatable;
 public class Bluetooth extends Updatable
 {
     private SerialConnection conn;
-
+    private BluetoothListener listener;
+    
     public Bluetooth(){
         this.conn = new SerialConnection(115200);
+    }
+    
+    public void setListener(BluetoothListener listener) {
+        this.listener = listener;
     }
     
     public void update() {
         if(this.conn.available() > 0){
             int data =conn.readByte();
             this.conn.writeByte(data);
+            
+            if(this.listener != null) {
+                Command command = Command.forCodeAndID(data, 1);
+                this.listener.onCommand(command);
+            }
+            
+            System.out.println("data: " + data);
         }
+    }
+    
+    public interface BluetoothListener {
+        public void onCommand(Command command);
     }
 
     // public void signal(){

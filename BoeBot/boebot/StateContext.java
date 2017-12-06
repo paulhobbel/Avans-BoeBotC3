@@ -5,6 +5,7 @@ import java.awt.Color;
  
 import boebot.hardware.Remote.RemoteEvent;
 import boebot.hardware.Ultrasone.UltrasoneEvent;
+import boebot.hardware.Bluetooth.BluetoothListener;
 import boebot.output.LED;
 
 /**
@@ -40,7 +41,6 @@ public class StateContext extends Updatable
     
     public StateContext(Robot robot, State initialState) {
         this.robot = robot;
-        //this.currentState = initialState;
         
         initialState.init(this);
         this.stateHistory.add(0, initialState);
@@ -68,12 +68,16 @@ public class StateContext extends Updatable
         this.robot.getUltrasone().setListener(listener);
     }
     
+    public void setBluetoothListener(BluetoothListener listener) {
+        this.robot.getBluetooth().setListener(listener);
+    }
+    
     public void setState(State newState) {
-        // this.lastState = this.currentState;
-        // this.currentState = newState;
-        // this.currentState.init(this);
-        
         // TODO: Maybe check in the stateHistory if we still have this state.
+        
+        this.setRemoteListener(null);
+        this.setBluetoothListener(null);
+        this.setUltrasoneListener(null);
         
         newState.init(this);
         this.stateHistory.add(0, newState);
@@ -82,8 +86,6 @@ public class StateContext extends Updatable
     }
     
     public void update() {
-        //this.currentState.update(this);
-        
         // The first item in the state history is the most recent one
         // thats why we take index 0 since that is the first item in the list
         this.stateHistory.get(0).update(this);
@@ -92,12 +94,13 @@ public class StateContext extends Updatable
     /**
      * Let the BoeBot go back to the previous state it was in.
      */
-    public void goBack() {
-        // this.currentState = this.lastState;
-        // this.currentState.init(this);
-        
+    public void goBack() {        
         // Remove the currentState
         this.stateHistory.remove(0);
+        
+        this.setRemoteListener(null);
+        this.setBluetoothListener(null);
+        this.setUltrasoneListener(null);
         
         // The previous state is now at index 0
         State previousState = this.stateHistory.get(0);

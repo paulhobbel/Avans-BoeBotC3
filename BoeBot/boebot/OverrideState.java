@@ -5,6 +5,7 @@ import TI.*;
 
 import boebot.hardware.Remote.RemoteEvent;
 import boebot.hardware.Ultrasone.UltrasoneEvent;
+import boebot.hardware.Bluetooth.BluetoothListener;
 
 import static boebot.Transmission.Speed.*;
 
@@ -35,7 +36,7 @@ public class OverrideState extends State
             @Override
             public void onDistance(int distance) {
                 if(distance != -1 && distance < Constants.COLLISION_DISTANCE) {
-                    context.setState(new CollisionState());
+                    //context.setState(new CollisionState());
                 }
             }
         });
@@ -46,7 +47,23 @@ public class OverrideState extends State
             public void onCommand(Command command) {
                 if(command.equals(Command.STANDBY)) {
                     context.setState(new IdleState());
-                } else {
+                } else if(command.equals(Command.FIGURE_EIGHT)) {
+                    context.setState(new EightState());
+                }else {
+                    handleCommand(command);
+                }
+            }
+        });
+        
+        context.setBluetoothListener(new BluetoothListener()
+        {
+            @Override
+            public void onCommand(Command command) {
+                if(command.equals(Command.STANDBY)) {
+                    context.setState(new IdleState());
+                } else if(command.equals(Command.FIGURE_EIGHT)) {
+                    context.setState(new EightState());
+                }else {
                     handleCommand(command);
                 }
             }
@@ -59,10 +76,9 @@ public class OverrideState extends State
     }
 
     public void handleCommand(Command command) {
-        System.out.println(command);
         switch(command) {
             case BREAK:
-            this.transmission.brake(FAST);
+            this.transmission.brake(MEDIUM);
             break;
             
             case FORWARDS:

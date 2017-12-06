@@ -84,7 +84,7 @@ public class CollisionState extends State
     private void handleCommand(Command command) {
         switch(command) {
             case BREAK:
-            this.transmission.brake(FAST);
+            this.transmission.brake(MEDIUM);
             break;
 
             case BACKWARDS:

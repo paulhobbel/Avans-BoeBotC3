@@ -65,7 +65,7 @@ public class EightState extends State{
         }
         if(counter >= 8200){
             counter = 0;
-            //context.goBack();
+            context.goBack();
         }
         
         this.transmission.update();

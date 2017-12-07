@@ -135,10 +135,32 @@ public class Transmission extends Updatable
      * @param speed The speed between -100 and 100 (0 is standing still).
      * @param time Time given by the user. In this amount of time the servo's must reach the target speed.
      */
-    private void speed(int speed, int time)
+    public void speed(int speed, int time)
     {
         this.engineRight.setSpeed(speed, time);
         this.engineLeft.setSpeed(speed, time);
+    }
+    
+    /**
+     * Drive to the given speed in the given amount of time with the left wheel.
+     * 
+     * @param speed The speed between -100 and 100 (0 is standing still).
+     * @param time Time given by the user. In this amount of time the servo's must reach the target speed.
+     */
+    public void speedLeft(int speed, int time)
+    {
+        this.engineLeft.setSpeed(speed, time);
+    }
+    
+    /**
+     * Drive to the given speed in the given amount of time with the right wheel.
+     * 
+     * @param speed The speed between -100 and 100 (0 is standing still).
+     * @param time Time given by the user. In this amount of time the servo's must reach the target speed.
+     */
+    public void speedRight(int speed, int time)
+    {
+        this.engineRight.setSpeed(speed, time);
     }
 
     /**
@@ -308,7 +330,6 @@ public class Transmission extends Updatable
             if(this.currentCycles < this.amountOfCycles) {
                 double speed = this.beginSpeed + this.currentCycles * this.speedPerCycle;
 
-                
                 this.engine.setSpeed((int)Math.round(speed));
                 this.currentCycles++;
 

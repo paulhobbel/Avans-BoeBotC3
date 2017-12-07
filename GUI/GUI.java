@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,12 +7,14 @@ import java.io.File;
 import javax.swing.border.*;
 import javax.swing.JOptionPane;
 
+
 /**
  * Write a description of class GUI here.
  *
  * @author (your name)
  * @version (a version number or a date)
  */
+
 public class GUI extends JFrame
 {
     private JFrame frame;
@@ -83,4 +86,5 @@ public class GUI extends JFrame
     private void makeHelpScreen(){
         JOptionPane.showMessageDialog(frame, "BoeBot\n Version 1.0" );
     }
+
 }

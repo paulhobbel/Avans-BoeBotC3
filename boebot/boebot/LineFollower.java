@@ -57,18 +57,26 @@ public class LineFollower
     }
 
     public boolean onLine() {
+        this.valueLeft = this.lightSensorLeft.getValue();
+        this.valueMiddle = this.lightSensorMiddle.getValue();
+        this.valueRight = this.lightSensorRight.getValue();
+        
         boolean answer = false;
-        if(lightSensorLeft.getValue() < this.black + Constants.ACCURACY || lightSensorMiddle.getValue() < this.black + Constants.ACCURACY || 
-        lightSensorRight.getValue() < this.black + Constants.ACCURACY)
+        if(this.valueLeft < this.black + Constants.ACCURACY || this.valueMiddle < this.black + Constants.ACCURACY || this.valueRight < this.black + Constants.ACCURACY)
+            answer = true;
+        return answer;
+    }
+    
+    public boolean onLineNoError() {
+        boolean answer = false;
+        this.error = getError();
+        if ((this.error > -50 && this.error < 50) && onLine())
             answer = true;
         return answer;
     }
 
     public void calculateTurn() {
-        this.valueLeft = this.lightSensorLeft.getValue();
-        this.valueMiddle = this.lightSensorMiddle.getValue();
-        this.valueRight = this.lightSensorRight.getValue();
-        this.error = getError(valueLeft, valueMiddle, valueRight);
+        this.error = getError();
         //System.out.println("Error: " + this.error);
 
         this.integral += this.error;
@@ -85,8 +93,12 @@ public class LineFollower
         // this.engineRight.update();
     }
 
-    public int getError(int lightSensorLeft, int lightSensorMiddle, int lightSensorRight) {
-        return (lightSensorLeft + lightSensorMiddle) - (lightSensorMiddle + lightSensorRight);
+    public int getError() {
+        this.valueLeft = this.lightSensorLeft.getValue();
+        this.valueMiddle = this.lightSensorMiddle.getValue();
+        this.valueRight = this.lightSensorRight.getValue();
+        this.error = (this.valueLeft + this.valueMiddle) - (this.valueMiddle + this.valueRight);
+        return this.error;
     }
 
     public void setSpeedLeft(int speed) {

@@ -1,7 +1,7 @@
 package boebot;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.Arrays;
 import TI.*;
 
 import boebot.hardware.LightSensor;
@@ -27,14 +27,16 @@ public class LineFollowerState extends State {
     private boolean busy = false;
     private int counter = 0;
     private int currentDirection;
-    private ArrayList<Integer> directions = new ArrayList();
+    private int[] directions;
     private int directionIndex = 0;
 
     public LineFollowerState() {
         this.transmission = new Transmission();
         this.lineFollower = new LineFollower();
 
-        directions.add(2); directions.add(0); directions.add(0); directions.add(0); directions.add(0); directions.add(2); directions.add(2); directions.add(2); 
+        //directions = new int[]{2, 0, 0, 0, 0, 2, 2, 2}; //eight
+        //directions = new int[]{1, 2, 1, 2, 1, 2, 1, 2}; //square
+        directions = new int[]{1, 3}; //line
     }
 
     public void update(StateContext context) {
@@ -74,25 +76,31 @@ public class LineFollowerState extends State {
     }
 
     private int getDirection() {
-        if(this.directions.size() >= this.directionIndex) {
+        if(this.directions.length <= this.directionIndex) {
             this.currentDirection = -1;
             this.directionIndex = 0;
         }
         else {
-            this.currentDirection = this.directions.get(this.directionIndex);
+            this.currentDirection = this.directions[this.directionIndex];
             this.directionIndex++;
         }
         return this.currentDirection;
     }
 
     private void crossingUpdate()  {
+        /*
+         * times for TP = 25:       TP = 75
+         * turn : 0, 250, 500       0, 70, 500
+         * 180:   0, 250, 1500      0, 70, 1500
+         */
+        
         switch(this.currentDirection) {
             case 0: //left
             if (this.counter == 0)
                 this.transmission.speed(Constants.TP, 100);
-            else if (this.counter >= 300)
+            else if (this.counter == 70)
                 this.transmission.left(SLOW);
-            else if(this.counter >= 1000 && this.lineFollower.onLineNoError())
+            else if (this.counter >= 500 && this.lineFollower.onLineNoError())
                 this.busy = false;
             this.counter++;
             break;
@@ -100,7 +108,7 @@ public class LineFollowerState extends State {
             case 1: //forwards
             if (this.counter == 0)
                 this.transmission.speed(Constants.TP, 100);
-            else if(this.counter >= 100)
+            else if (this.counter >= 100)
                 this.busy = false;
             this.counter++;
             break;
@@ -108,9 +116,9 @@ public class LineFollowerState extends State {
             case 2: //right
             if (this.counter == 0)
                 this.transmission.speed(Constants.TP, 100);
-            else if (this.counter >= 300)
+            else if (this.counter == 70)
                 this.transmission.right(SLOW);
-            else if(this.counter >= 1000 && this.lineFollower.onLineNoError())
+            else if (this.counter >= 500 && this.lineFollower.onLineNoError())
                 this.busy = false;
             this.counter++;
             break;
@@ -118,9 +126,9 @@ public class LineFollowerState extends State {
             case 3: //backwards
             if (this.counter == 0)
                 this.transmission.speed(Constants.TP, 100);
-            else if (this.counter >= 300)
+            else if (this.counter == 70)
                 this.transmission.right(SLOW);
-            else if(this.counter >= 2000 && this.lineFollower.onLineNoError())
+            else if (this.counter >= 1500 && this.lineFollower.onLineNoError())
                 this.busy = false;
             this.counter++;
             break;

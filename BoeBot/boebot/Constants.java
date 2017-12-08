@@ -98,9 +98,14 @@ public class Constants
     public static final double DAMP = 0.8;
     
     /**
-     * Linefollower constant: Acceleration of the Engines. 0 is none. 
+     * Linefollower constant: Acceleration of the Engines. 0 is none
      */
     public static final double ACCELERATION = 0;
+    
+    /**
+     * Linefollower constant: Accuracy of the linedetection
+     */
+    public static final double ACCURACY = 400;
     
     /**
      * Light value of a white surface

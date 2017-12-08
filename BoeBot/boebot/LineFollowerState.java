@@ -1,6 +1,7 @@
 package boebot;
 
 import java.awt.Color;
+import java.util.Arrays;
 import TI.*;
 
 import boebot.hardware.LightSensor;
@@ -20,83 +21,117 @@ import boebot.Constants;
  * @version 05-12-2017 (Version 1.0)
  */
 public class LineFollowerState extends State {
-    private int integral = 0;
-    private int lastError = 0;
-    private int derivative = 0;
-    private int error = 0;
-    private int turn = 0;
+    private Transmission transmission;
+    private LineFollower lineFollower;
 
-    private int valueLeft;
-    private int valueMiddle;
-    private int valueRight;
-
-    private LightSensor lightSensorLeft;
-    private LightSensor lightSensorMiddle;
-    private LightSensor lightSensorRight;
-
-    private Engine engineLeft;
-    private Engine engineRight;
+    private boolean busy = false;
+    private int counter = 0;
+    private int currentDirection;
+    private int[] directions;
+    private int directionIndex = 0;
 
     public LineFollowerState() {
-        engineLeft = new Engine(Constants.SERVO_LEFT_PIN, true);
-        engineRight = new Engine(Constants.SERVO_RIGHT_PIN, false);
+        this.transmission = new Transmission();
+        this.lineFollower = new LineFollower();
 
-        lightSensorLeft = new LightSensor(Constants.LIGHT_RIGHT_PIN);
-        lightSensorMiddle = new LightSensor(Constants.LIGHT_MIDDLE_PIN);
-        lightSensorRight = new LightSensor(Constants.LIGHT_LEFT_PIN);
+        //directions = new int[]{2, 0, 0, 0, 0, 2, 2, 2}; //eight
+        //directions = new int[]{1, 2, 1, 2, 1, 2, 1, 2}; //square
+        directions = new int[]{1, 3}; //line
+    }
+
+    public void update(StateContext context) {
+        if(!this.busy) {
+            if(this.lineFollower.onCrossing()) {
+                if(getDirection() != -1) {
+                    this.counter = 0;
+                    crossingUpdate();
+                    this.busy = true;
+                    System.out.println("Crossing...");
+                }
+                else {
+                    System.out.println("Done with the directions. Starting over...");
+                    followLine();
+                }
+            }
+            else {
+                followLine();
+            }
+        }
+        else {
+            crossingUpdate();
+        }
+        this.transmission.update();
     }
 
     public void init(StateContext context) {
         context.setColor(Color.WHITE);
+        this.busy = false;
+        this.counter = 0;
     }
 
-    @Override
-    public void update(StateContext context) {
-        this.valueLeft = this.lightSensorLeft.getValue();
-        this.valueMiddle = this.lightSensorMiddle.getValue();
-        this.valueRight = this.lightSensorRight.getValue();
-        this.error = getError(valueLeft, valueMiddle, valueRight);
-        //System.out.println("Error: " + this.error);
-
-        this.integral += this.error;
-        this.derivative = this.error - this.lastError;
-        this.lastError = this.error;
-        this.turn = (int)(Constants.KP * this.error + Constants.KI * this.integral + Constants.KD * this.derivative);
-        this.integral *= Constants.DAMP;
-        //System.out.println("Turn: " + this.turn);
-
-        setSpeedLeft(Constants.TP - this.turn);
-        setSpeedRight(Constants.TP + this.turn);
-
-        // this.engineLeft.update();
-        // this.engineRight.update();
+    private void followLine() {
+        this.lineFollower.calculateTurn();
+        this.transmission.speedLeft(this.lineFollower.getSpeedLeft(), this.lineFollower.getTimeLeft());
+        this.transmission.speedRight(this.lineFollower.getSpeedRight(), this.lineFollower.getTimeRight());
     }
 
-    public int getError(int lightSensorLeft, int lightSensorMiddle, int lightSensorRight) {
-        return (lightSensorLeft + lightSensorMiddle) - (lightSensorMiddle + lightSensorRight);
+    private int getDirection() {
+        if(this.directions.length <= this.directionIndex) {
+            this.currentDirection = -1;
+            this.directionIndex = 0;
+        }
+        else {
+            this.currentDirection = this.directions[this.directionIndex];
+            this.directionIndex++;
+        }
+        return this.currentDirection;
     }
 
-    public void setSpeedLeft(int speed) {
-        if(speed < -100)
-            speed = -100;
-        else if(speed > 100)
-            speed = 100;
+    private void crossingUpdate()  {
+        /*
+         * times for TP = 25:       TP = 75
+         * turn : 0, 250, 500       0, 70, 500
+         * 180:   0, 250, 1500      0, 70, 1500
+         */
+        
+        switch(this.currentDirection) {
+            case 0: //left
+            if (this.counter == 0)
+                this.transmission.speed(Constants.TP, 100);
+            else if (this.counter == 70)
+                this.transmission.left(SLOW);
+            else if (this.counter >= 500 && this.lineFollower.onLineNoError())
+                this.busy = false;
+            this.counter++;
+            break;
 
-        int time = (int)(Math.abs(engineLeft.getSpeed()-speed)*Constants.ACCELERATION);
-        if(time < 1)
-            time = 1;
-        this.engineLeft.setSpeed(speed);
-    }
+            case 1: //forwards
+            if (this.counter == 0)
+                this.transmission.speed(Constants.TP, 100);
+            else if (this.counter >= 100)
+                this.busy = false;
+            this.counter++;
+            break;
 
-    public void setSpeedRight(int speed) {
-        if(speed < -100)
-            speed = -100;
-        else if(speed > 100)
-            speed = 100;
+            case 2: //right
+            if (this.counter == 0)
+                this.transmission.speed(Constants.TP, 100);
+            else if (this.counter == 70)
+                this.transmission.right(SLOW);
+            else if (this.counter >= 500 && this.lineFollower.onLineNoError())
+                this.busy = false;
+            this.counter++;
+            break;
 
-        int time = (int)(Math.abs(engineLeft.getSpeed()-speed)*Constants.ACCELERATION);
-        if(time < 1)
-            time = 1;
-        this.engineRight.setSpeed(speed);
+            case 3: //backwards
+            if (this.counter == 0)
+                this.transmission.speed(Constants.TP, 100);
+            else if (this.counter == 70)
+                this.transmission.right(SLOW);
+            else if (this.counter >= 1500 && this.lineFollower.onLineNoError())
+                this.busy = false;
+            this.counter++;
+            break;
+        }
     }
 }

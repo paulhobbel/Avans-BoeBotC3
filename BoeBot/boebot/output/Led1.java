@@ -8,6 +8,6 @@ import boebot.output.Notification.LedContext;
  * @author (your name)
  * @version (a version number or a date)
  */
-public interface Led {
+public interface Led1 {
     public void update(LedContext context);
 }

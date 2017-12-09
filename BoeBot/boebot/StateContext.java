@@ -2,7 +2,9 @@ package boebot;
 
 import java.util.ArrayList;
 import java.awt.Color;
- 
+
+import boebot.output.Notification;
+
 import boebot.hardware.Remote.RemoteEvent;
 import boebot.hardware.Ultrasone.UltrasoneEvent;
 import boebot.hardware.Bluetooth.BluetoothListener;
@@ -26,6 +28,8 @@ public class StateContext extends Updatable
     
     private Robot robot;
     
+    private Notification notification;
+    
     /**
      * An array of all past states, were the current state will be on index 0
      * 
@@ -41,6 +45,8 @@ public class StateContext extends Updatable
     
     public StateContext(Robot robot, State initialState) {
         this.robot = robot;
+        
+        this.notification = new Notification();
         
         initialState.init(this);
         this.stateHistory.add(0, initialState);
@@ -83,6 +89,10 @@ public class StateContext extends Updatable
         this.stateHistory.add(0, newState);
         
         System.out.println("Switched to state: " + newState + ", there are " + (this.stateHistory.size()-1) + " previous states.");
+    }
+    
+    public Notification getNotification() {
+        return this.notification;
     }
     
     public void update() {

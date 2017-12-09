@@ -9,5 +9,5 @@ import boebot.output.Notification.SoundContext;
  * @version (a version number or a date)
  */
 public interface Sound{
-    public void update(SoundContext context);
+    public void play(SoundContext context);
 }

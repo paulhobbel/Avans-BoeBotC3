@@ -16,6 +16,11 @@ import boebot.hardware.Engine;
 public class Constants
 {
     /**
+     * To be placed somewere :P
+     */
+    public static final int SPEAKER_PIN = 5;
+    
+    /**
      * The pin of the left servo
      */
     public static final int SERVO_LEFT_PIN = 14;

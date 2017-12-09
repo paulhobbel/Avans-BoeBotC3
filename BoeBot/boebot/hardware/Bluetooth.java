@@ -9,7 +9,7 @@ import boebot.Updatable;
 import boebot.Command;
 
 /**
- * A hardware class to interact with the Bluetooth module.k
+ * A hardware class to interact with the Bluetooth module.
  *
  * @author Paul Hobbel
  * @author Thomas Mandemaker

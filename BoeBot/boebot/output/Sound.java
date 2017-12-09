@@ -1,6 +1,6 @@
 package boebot.output;
 
-import boebot.output.Notification.LedContext;
+import boebot.output.Notification.SoundContext;
 
 /**
  * Write a description of interface Led here.
@@ -8,6 +8,6 @@ import boebot.output.Notification.LedContext;
  * @author (your name)
  * @version (a version number or a date)
  */
-public interface Led {
-    public void update(LedContext context);
+public interface Sound{
+    public void update(SoundContext context);
 }

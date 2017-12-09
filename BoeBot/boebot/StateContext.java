@@ -6,7 +6,7 @@ import java.awt.Color;
 import boebot.hardware.Remote.RemoteEvent;
 import boebot.hardware.Ultrasone.UltrasoneEvent;
 import boebot.hardware.Bluetooth.BluetoothListener;
-import boebot.output.LED;
+import boebot.hardware.LED;
 
 /**
  * Write a description of class StateContext here.

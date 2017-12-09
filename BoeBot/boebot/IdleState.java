@@ -36,11 +36,14 @@ public class IdleState extends State
             }
         );
 
-        context.setBluetoothListener(command ->
+        context.setBluetoothListener(message ->
             {
-                if(command.equals(Command.STANDBY)) {
-                    context.setState(new OverrideState());
-                }
+                // if(command.equals(Command.STANDBY)) {
+                    // context.setState(new OverrideState());
+                // }
+                System.out.println(message);
+                System.out.println(message.getFunction());
+                System.out.println(message.getData());
             }
         );
         this.transmission.brake(MEDIUM);

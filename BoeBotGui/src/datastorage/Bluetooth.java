@@ -25,8 +25,12 @@ public class Bluetooth {
         }
 
         serialPort = new SerialPort(COM);
+
         serialPort.openPort();
         serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+        serialPort.setDTR(false);
+        serialPort.setRTS(false);
+        serialPort.addEventListener(new BluetoothReader());
     }
 
     /**
@@ -35,6 +39,20 @@ public class Bluetooth {
      */
     public static String[] getPortNames() {
         return SerialPortList.getPortNames();
+    }
+
+    public static Protocol readProtocol(int byteCount) {
+        try {
+            String protocolMessage = serialPort.readString(byteCount).replace("\r\n", "");
+            if(protocolMessage.length() > 0) {
+                return Protocol.convertMessage(protocolMessage);
+            }
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -46,7 +64,7 @@ public class Bluetooth {
      */
     public static void sendProtocol(Protocol protocol, String function, String data) {
         try {
-            serialPort.writeString(protocol.toString(function, data));
+            serialPort.writeString(protocol.toString(function, data) + "\n");
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, "Please select a COM Port first!");
         } catch (ProtocolException|SerialPortException e) {

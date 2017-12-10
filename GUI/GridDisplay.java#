@@ -1,0 +1,99 @@
+package 
+
+import java.awt.Graphics;
+import javax.swing.JPanel;
+import java.awt.Graphics.*;
+import java.util.*;
+import java.awt.event.*;
+import java.awt.*;
+
+/**
+ * Write a description of class GridDisplay here. //boudewijn ik wil ook mac xcarlos
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class GridDisplay extends JPanel implements MouseListener
+{  
+    private ArrayList<GridButton> buttons = new ArrayList();
+    private ArrayList
+    private boolean arrayMade =false;
+    
+    public GridDisplay(){
+     
+        this.addMouseListener(this);
+        
+    
+    }
+    
+    public void paintComponent (Graphics g) {
+        super.paintComponent(g);
+        
+        
+        for(int i = 1; i < 9; i++){
+            //g.drawLine(this.getWidth()/9 * i, 0, this.getWidth()/9 * i, this.getHeight());
+            g.fillRect(this.getWidth()/9 * i, 0, 5, this.getHeight());
+        }
+
+        for(int i = 1; i < 11; i++){
+            //g.drawLine(this.getWidth()/9 * i, 0, this.getWidth()/9 * i, this.getHeight());
+            g.fillRect(0, this.getHeight()/11 * i, getWidth(), 5);
+        }
+        
+        if(!arrayMade)
+            createButtons();
+            
+        for(GridButton button: this.buttons){
+            button.draw(g);
+        }
+        
+    }
+    
+    private void createButtons(){
+        if(arrayMade) {
+            return;
+        }
+        
+        int x = 1;
+        int y = 1;
+        for(int i = 0; i < 89; i++){
+            if(x < 9){
+                //g.fillOval((this.getWidth()/9 * x)-8 , (this.getHeight()/11 * y) -8, 20, 20);
+                GridButton button = new GridButton((this.getWidth()/9 * x)-8 , (this.getHeight()/11 * y) -8, 20, 20);
+                // button.draw(g);
+                buttons.add(button);
+                x++;
+            }
+            else{
+                x = 1;
+                y++; 
+            }
+        
+        }
+        arrayMade = true;
+    }
+    
+    public void mouseClicked(MouseEvent e){
+        System.out.println(e.getX());
+        System.out.println(e.getY());
+        for(GridButton button: this.buttons){
+            if(button.collides(e.getPoint())){
+                System.out.println("pressed, goed gedaaan faggot");
+                button.setColor(Color.RED);
+                this.repaint();
+            }
+        }
+    }
+    
+    public void mouseExited(MouseEvent e){
+    }
+    
+    public void  mousePressed(MouseEvent e){
+    }
+    
+    public void mouseReleased(MouseEvent e){
+    }
+    
+    public void mouseEntered(MouseEvent e){
+    }
+}

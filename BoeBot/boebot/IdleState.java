@@ -4,6 +4,7 @@ import java.awt.Color;
 import TI.*;
 
 import boebot.Transmission;
+import boebot.output.Tone;
 import static boebot.Transmission.Speed.*;
 
 /**
@@ -36,14 +37,22 @@ public class IdleState extends State
             }
         );
 
-        context.setBluetoothListener(command ->
+        context.setBluetoothListener(message ->
             {
-                if(command.equals(Command.STANDBY)) {
-                    context.setState(new OverrideState());
-                }
+                // if(command.equals(Command.STANDBY)) {
+                    // context.setState(new OverrideState());
+                // }
+                System.out.println(message);
+                System.out.println(message.getFunction());
+                System.out.println(message.getData());
             }
         );
         this.transmission.brake(MEDIUM);
+        
+        // final Tone tone = Tone.A;
+        // tone.setDuration(1000);
+        
+        // context.getNotification().playSound(sContext -> sContext.addTone(tone));
     }
 
     public void update(StateContext context) {

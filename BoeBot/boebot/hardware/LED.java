@@ -1,4 +1,4 @@
-package boebot.output;
+package boebot.hardware;
 
 import TI.*;
 import java.awt.Color;

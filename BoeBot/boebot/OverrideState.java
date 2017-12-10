@@ -5,7 +5,7 @@ import TI.*;
 
 import boebot.hardware.Remote.RemoteEvent;
 import boebot.hardware.Ultrasone.UltrasoneEvent;
-import boebot.hardware.Bluetooth.BluetoothListener;
+import boebot.hardware.Bluetooth.*;
 
 import static boebot.Transmission.Speed.*;
 
@@ -58,14 +58,17 @@ public class OverrideState extends State
         context.setBluetoothListener(new BluetoothListener()
         {
             @Override
-            public void onCommand(Command command) {
-                if(command.equals(Command.STANDBY)) {
-                    context.setState(new IdleState());
-                } else if(command.equals(Command.FIGURE_EIGHT)) {
-                    context.setState(new EightState());
-                }else {
-                    handleCommand(command);
-                }
+            public void onProtocolMessage(Protocol message) {
+                // if(command.equals(Command.STANDBY)) {
+                    // context.setState(new IdleState());
+                // } else if(command.equals(Command.FIGURE_EIGHT)) {
+                    // context.setState(new EightState());
+                // }else {
+                    // handleCommand(command);
+                // }
+                System.out.println(message);
+                System.out.println(message.getFunction());
+                System.out.println(message.getData() == "40");
             }
         });
     }

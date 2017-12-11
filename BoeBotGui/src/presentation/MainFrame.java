@@ -37,10 +37,10 @@ public class MainFrame extends JFrame {
         // borderContentRight.add(new JLabel("Test"), BorderLayout.CENTER);
         //  borderContentRight.add(stuff.createGUI();
         this.makeMenuBar();
-
         this.makeLeftContent();
         this.makeMiddleContent();
         //this.makeRightContent();
+
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int)screenSize.getWidth() - 600;
@@ -106,6 +106,9 @@ public class MainFrame extends JFrame {
         JPanel bottomBar = new JPanel(new FlowLayout());
         GridPanel gridPanel = new GridPanel(11, 9);
 
+        this.contentLeft.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+        bottomBar.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+
         JButton resetButton = new JButton("reset");
         JButton undoButton = new JButton("undo");
         JButton sendButton = new JButton("send");
@@ -113,6 +116,10 @@ public class MainFrame extends JFrame {
         resetButton.addActionListener(e -> System.out.println("Reset: " + e));
         undoButton.addActionListener(e -> System.out.println("Undo: " + e));
         sendButton.addActionListener(e -> System.out.println("Send: " + e));
+
+        resetButton.setPreferredSize(new Dimension(100, 50));
+        undoButton.setPreferredSize(new Dimension(100, 50));
+        sendButton.setPreferredSize(new Dimension(100, 50));
 
         bottomBar.add(resetButton);
         bottomBar.add(undoButton);
@@ -126,9 +133,12 @@ public class MainFrame extends JFrame {
         StatusPanel statusPanel = new StatusPanel();
         CommandPanel commandPanel = new CommandPanel();
 
-        //this.contentMiddle.add(new JLabel("BoeBot state: IDLE"), BorderLayout.NORTH);
+            //this.contentMiddle.add(new JLabel("BoeBot state: IDLE"), BorderLayout.NORTH);
         this.contentMiddle.add(statusPanel, BorderLayout.NORTH);
         this.contentMiddle.add(commandPanel);
+        this.contentMiddle.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+        statusPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+
     }
 
     private void initBluetooth(String portName){

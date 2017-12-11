@@ -1,6 +1,7 @@
 package presentation;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class StatusPanel extends JPanel {
 
@@ -8,6 +9,7 @@ public class StatusPanel extends JPanel {
 
     public StatusPanel() {
         this.statusLabel = new JLabel("BoeBot state: " + BoeBotState.IDLE);
+        statusLabel.setFont(new Font("Arial", Font.PLAIN, 40));
         this.add(this.statusLabel);
     }
 

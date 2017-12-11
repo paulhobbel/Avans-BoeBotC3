@@ -51,7 +51,9 @@ public class TerminalFrame extends JFrame {
         this.panel.add(this.bottomContent, BorderLayout.SOUTH);
 
         this.add(this.panel);
-        this.pack();
+        this.setLocationRelativeTo(null);
+
+        this.setSize(500, 500);
     }
 
     public void addLog(String level, String text) {

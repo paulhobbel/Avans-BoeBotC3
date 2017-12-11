@@ -22,18 +22,16 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
 
-        JPanel content = new JPanel(new GridLayout(1 , 3));
+        JPanel content = new JPanel(new GridLayout(1 , 2));
 
         this.contentLeft = new JPanel(new BorderLayout());
         this.contentMiddle = new JPanel(new BorderLayout());
-        this.contentRight = new JPanel(new BorderLayout());
+     //   this.contentRight = new JPanel(new BorderLayout());
 
 
         content.add(this.contentLeft);
         content.add(this.contentMiddle);
-        content.add(this.contentRight);
-
-
+       // content.add(this.contentRight);
 
 
         // borderContentRight.add(new JLabel("Test"), BorderLayout.CENTER);
@@ -42,10 +40,10 @@ public class MainFrame extends JFrame {
 
         this.makeLeftContent();
         this.makeMiddleContent();
-        this.makeRightContent();
+        //this.makeRightContent();
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int)screenSize.getWidth() - 80;
+        int width = (int)screenSize.getWidth() - 600;
         int height = (int)screenSize.getHeight() - 80;
         this.setSize(width, height);
 
@@ -133,10 +131,6 @@ public class MainFrame extends JFrame {
         this.contentMiddle.add(commandPanel);
     }
 
-    private void makeRightContent() {
-
-    }
-
     private void initBluetooth(String portName){
         try {
             Bluetooth.connectToCOM(portName);
@@ -163,6 +157,6 @@ public class MainFrame extends JFrame {
     }
 
     private void makeHelpScreen() {
-        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 1.0" );
+        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 3.0" );
     }
 }

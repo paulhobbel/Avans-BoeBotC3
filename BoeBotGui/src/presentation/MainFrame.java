@@ -139,13 +139,11 @@ public class MainFrame extends JFrame {
                 public void serialEvent(SerialPortEvent event) {
                     if(event.isRXCHAR() && event.getEventValue() > 0) {
                         Protocol protocol = Bluetooth.readProtocol(event.getEventValue());
-                        if(protocol != null) {
-                            switch(protocol){
+                        if (protocol != null) {
+                            switch (protocol) {
                                 case LOG:
                                     terminal.addLog(protocol.getFunction(), protocol.getData());
                                     break;
-
-
                             }
                         }
                     }

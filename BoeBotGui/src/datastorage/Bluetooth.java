@@ -31,7 +31,6 @@ public class Bluetooth {
         serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
         serialPort.setDTR(false);
         serialPort.setRTS(false);
-        //serialPort.addEventListener(new BluetoothReader());
     }
     public static void addEventListener(SerialPortEventListener listener){
         try {
@@ -75,6 +74,16 @@ public class Bluetooth {
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, "Please select a COM Port first!");
         } catch (ProtocolException|SerialPortException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+
+    public static void sendProtocol(Protocol protocol) {
+        try {
+            serialPort.writeString(protocol.toSendString() + "\n");
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Please select a COM Port first!");
+        } catch (SerialPortException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }

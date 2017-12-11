@@ -1,16 +1,13 @@
 package presentation;
 
 import com.sun.deploy.util.ArrayUtil;
+import datastorage.Bluetooth;
 import datastorage.Protocol;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Date;
 
 public class TerminalFrame extends JFrame {
     private JPanel panel;
@@ -21,8 +18,7 @@ public class TerminalFrame extends JFrame {
     private JTextField textField;
 
     private JComboBox<Protocol> protocolComboBox;
-    private JMenu protocolMenu;
-    private Protocol currentProtocol;
+    private JComboBox<String> protocolFunctionComboBox;
 
     public TerminalFrame(){
         super("Terminal");
@@ -32,20 +28,18 @@ public class TerminalFrame extends JFrame {
         this.textArea = new JTextArea(10, 40);
         this.textArea.setEditable(false);
         this.scrollPane = new JScrollPane(textArea);
-
         this.textField = new JTextField(40);
-        //this.textField.addActionListener(e -> this.addLog(""));
+        this.textField.addActionListener(e -> this.sendProtocol());
 
         this.protocolComboBox = new JComboBox<>(Protocol.values());
-        this.protocolMenu = new JMenu();
+        this.protocolComboBox.addActionListener(e -> this.updateFunctionComboBox());
 
-        for(Protocol protocol : Protocol.values()) {
-            JMenuItem item = new JMenuItem(protocol.toString());
-            this.protocolMenu.add(item);
-        }
+        this.protocolFunctionComboBox = new JComboBox<>();
+        this.protocolFunctionComboBox.addActionListener(e -> this.updateProtocol());
 
         this.bottomContent.add(this.textField);
         this.bottomContent.add(this.protocolComboBox);
+        this.bottomContent.add(this.protocolFunctionComboBox);
 
         this.panel.add(this.scrollPane, BorderLayout.CENTER);
         this.panel.add(this.bottomContent, BorderLayout.SOUTH);
@@ -53,7 +47,43 @@ public class TerminalFrame extends JFrame {
         this.add(this.panel);
         this.setLocationRelativeTo(null);
 
-        this.setSize(500, 500);
+        this.setSize(670, 380);
+
+        this.updateFunctionComboBox();
+    }
+
+    private void updateFunctionComboBox() {
+        Protocol selectedProtocol = (Protocol) this.protocolComboBox.getSelectedItem();
+
+        this.protocolFunctionComboBox.removeAllItems();
+
+        for (String function : selectedProtocol.getFunctions()) {
+            this.protocolFunctionComboBox.addItem(function);
+        }
+    }
+
+    private void updateProtocol() {
+        Protocol selectedProtocol = (Protocol) this.protocolComboBox.getSelectedItem();
+        String selectedFunction = (String) this.protocolFunctionComboBox.getSelectedItem();
+
+        selectedProtocol.setFunction(selectedFunction);
+
+        this.textField.setText("");
+    }
+
+    private void sendProtocol() {
+        String data = this.textField.getText();
+
+        if(!data.equals("")) {
+            Protocol selectedProtocol = (Protocol) this.protocolComboBox.getSelectedItem();
+            selectedProtocol.setData(this.textField.getText());
+
+            System.out.println(selectedProtocol.toSendString());
+            Bluetooth.sendProtocol(selectedProtocol);
+            this.textField.setText("");
+
+            this.addLog("DEBUG", "Sent protocol message: " + selectedProtocol.toSendString());
+        }
     }
 
     public void addLog(String level, String text) {

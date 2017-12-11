@@ -46,16 +46,18 @@ public enum Protocol {
     /**
      * Method to set the function.
      */
-    private void setFunction(String function) {
+    public void setFunction(String function) {
         this.function = function;
     }
 
     /**
      * Method to set the data.
      */
-    private void setData(String data) {
+    public void setData(String data) {
         this.data = data;
     }
+
+    public String[] getFunctions() { return this.functions; }
 
     /**
      * Get the function.
@@ -118,5 +120,9 @@ public enum Protocol {
         }
 
         return this + "\\" + function + "\\" + data;
+    }
+
+    public String toSendString() {
+        return this + "\\" + this.function + "\\" + this.data;
     }
 }

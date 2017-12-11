@@ -106,8 +106,9 @@ public class MainFrame extends JFrame {
         JPanel bottomBar = new JPanel(new FlowLayout());
         GridPanel gridPanel = new GridPanel(11, 9);
 
-        this.contentLeft.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
-        bottomBar.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+        //this.contentLeft.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+       // bottomBar.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+        gridPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
 
         JButton resetButton = new JButton("reset");
         JButton undoButton = new JButton("undo");
@@ -136,8 +137,8 @@ public class MainFrame extends JFrame {
             //this.contentMiddle.add(new JLabel("BoeBot state: IDLE"), BorderLayout.NORTH);
         this.contentMiddle.add(statusPanel, BorderLayout.NORTH);
         this.contentMiddle.add(commandPanel);
-        this.contentMiddle.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
-        statusPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+       // this.contentMiddle.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+       // statusPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
 
     }
 

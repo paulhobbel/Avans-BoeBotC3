@@ -14,6 +14,7 @@ import java.util.Date;
 
 public class TerminalFrame extends JFrame {
     private JPanel panel;
+    private JPanel bottomContent;
 
     private JTextArea textArea;
     private JScrollPane scrollPane;
@@ -25,8 +26,8 @@ public class TerminalFrame extends JFrame {
 
     public TerminalFrame(){
         super("Terminal");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.panel = new JPanel(new BorderLayout());
+        this.bottomContent = new JPanel(new FlowLayout());
 
         this.textArea = new JTextArea(10, 40);
         this.textArea.setEditable(false);
@@ -43,17 +44,16 @@ public class TerminalFrame extends JFrame {
             this.protocolMenu.add(item);
         }
 
-        this.createFrame();
+        this.bottomContent.add(this.textField);
+        this.bottomContent.add(this.protocolComboBox);
+
+        this.panel.add(this.scrollPane, BorderLayout.CENTER);
+        this.panel.add(this.bottomContent, BorderLayout.SOUTH);
+
         this.add(this.panel);
         this.pack();
     }
 
-    public void createFrame(){
-        this.panel.add(this.scrollPane, BorderLayout.CENTER);
-        this.panel.add(this.textField, BorderLayout.SOUTH);
-        this.panel.add(this.protocolComboBox, BorderLayout.SOUTH);
-//        this.panel.add(this.protocolMenu, BorderLayout.SOUTH);
-    }
     public void addLog(String level, String text) {
         LocalDateTime date = LocalDateTime.now();
 

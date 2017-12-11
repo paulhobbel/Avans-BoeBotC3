@@ -12,7 +12,7 @@ public class StatusPanel extends JPanel {
         statusLabel.setFont(new Font("Arial", Font.PLAIN, 40));
 
         //this.statusLabel = new JProgressBar();
-     
+
 
         this.add(this.statusLabel);
     }

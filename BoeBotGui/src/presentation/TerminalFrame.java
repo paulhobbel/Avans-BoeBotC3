@@ -45,7 +45,9 @@ public class TerminalFrame extends JFrame {
 
         this.createFrame();
         this.add(this.panel);
-        this.pack();
+        this.setLocationRelativeTo(null);
+
+        this.setSize(500, 500);
     }
 
     public void createFrame(){

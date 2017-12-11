@@ -2,6 +2,9 @@ package presentation;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
 import datastorage.Bluetooth;
+import datastorage.Protocol;
+import jssc.SerialPortEvent;
+import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import javax.swing.*;
@@ -15,8 +18,9 @@ public class MainFrame extends JFrame {
     private JPanel contentMiddle;
     private JPanel contentRight;
 
-    public MainFrame() {
+    private static TerminalFrame terminal = new TerminalFrame();
 
+    public MainFrame() {
 
         JPanel content = new JPanel(new GridLayout(1 , 3));
 
@@ -62,8 +66,9 @@ public class MainFrame extends JFrame {
         JMenu optionsCOMSubMenu = new JMenu("COM settings");
         optionsMenu.add(optionsCOMSubMenu);
 
-
-
+        JCheckBoxMenuItem optionsTermalCheckboxItem = new JCheckBoxMenuItem("Show Terminal");
+        optionsMenu.add(optionsTermalCheckboxItem);
+        optionsTermalCheckboxItem.addActionListener(e -> this.terminal.setVisible(true));
 
         JMenuItem helpAboutMenuItem = new JMenuItem("About the BoeBot...");
         helpAboutMenuItem.addActionListener(e -> makeHelpScreen());
@@ -76,11 +81,7 @@ public class MainFrame extends JFrame {
             JMenuItem item = new JMenuItem(portName);
 
             item.addActionListener(event -> {
-                try {
-                    Bluetooth.connectToCOM(portName);
-                } catch (SerialPortException e) {
-                    JOptionPane.showMessageDialog(this, e.getMessage());
-                }
+                this.initBluetooth(portName);
             });
 
             optionsCOMSubMenu.add(item);
@@ -134,6 +135,31 @@ public class MainFrame extends JFrame {
 
     private void makeRightContent() {
 
+    }
+
+    private void initBluetooth(String portName){
+        try {
+            Bluetooth.connectToCOM(portName);
+            Bluetooth.addEventListener(new SerialPortEventListener() {
+                @Override
+                public void serialEvent(SerialPortEvent event) {
+                    if(event.isRXCHAR() && event.getEventValue() > 0) {
+                        Protocol protocol = Bluetooth.readProtocol(event.getEventValue());
+                        if(protocol != null) {
+                            switch(protocol){
+                                case LOG:
+                                    terminal.addLog(protocol.getFunction(), protocol.getData());
+                                    break;
+
+
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (SerialPortException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }
 
     private void makeHelpScreen() {

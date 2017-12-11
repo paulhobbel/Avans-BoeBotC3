@@ -1,6 +1,7 @@
 package datastorage;
 
 import jssc.SerialPort;
+import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import jssc.SerialPortList;
 
@@ -30,9 +31,15 @@ public class Bluetooth {
         serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
         serialPort.setDTR(false);
         serialPort.setRTS(false);
-        serialPort.addEventListener(new BluetoothReader());
+        //serialPort.addEventListener(new BluetoothReader());
     }
-
+    public static void addEventListener(SerialPortEventListener listener){
+        try {
+            serialPort.addEventListener(listener);
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Get all available COM ports
      * @return all available COM ports

@@ -10,6 +10,10 @@ public class StatusPanel extends JPanel {
     public StatusPanel() {
         this.statusLabel = new JLabel("BoeBot state: " + BoeBotState.IDLE);
         statusLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+
+        //this.statusLabel = new JProgressBar();
+     
+
         this.add(this.statusLabel);
     }
 

@@ -35,6 +35,14 @@ public class CommandPanel extends JPanel{
         this.addButtonToGrid(downButton,1, 2);
         this.addButtonToGrid(rightButton,2, 1);
         this.addButtonToGrid(leftButton,0, 1);
+
+        breakButton.setPreferredSize(new Dimension(100,100));
+        powerButton.setPreferredSize(new Dimension(100, 50));
+        upButton.setPreferredSize(new Dimension(100, 50));
+        downButton.setPreferredSize(new Dimension(100, 50));
+        rightButton.setPreferredSize(new Dimension(100, 50));
+        leftButton.setPreferredSize(new Dimension(100, 50));
+
     }
 
     private void addButtonToGrid(JButton button, int x, int y) {

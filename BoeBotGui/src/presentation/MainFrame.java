@@ -114,7 +114,7 @@ public class MainFrame extends JFrame {
         JButton undoButton = new JButton("undo");
         JButton sendButton = new JButton("send");
 
-        resetButton.addActionListener(e -> System.out.println("Reset: " + e));
+        resetButton.addActionListener(e -> gridPanel.resetRoute());
         undoButton.addActionListener(e -> System.out.println("Undo: " + e));
         sendButton.addActionListener(e -> System.out.println("Send: " + e));
 

@@ -47,7 +47,7 @@ public class TerminalFrame extends JFrame {
         this.add(this.panel);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        
+
         this.setSize(670, 380);
 
         this.updateFunctionComboBox();

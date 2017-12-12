@@ -12,12 +12,12 @@ public class GridPanel extends JPanel implements MouseListener {
     private int rows;
     private int cols;
 
-    private ArrayList<GridButton> buttons = new ArrayList();
+    private ArrayList<GridButton> buttons = new ArrayList<>();
     //private GridButton[][] newButtons;
-    private ArrayList<GridLine> lines = new ArrayList();
-    private ArrayList<GridButton> route = new ArrayList();
-    private ArrayList<Route.RawDirection> directions = new ArrayList<>();
-    //private Route route = new Route();
+    private ArrayList<GridLine> lines = new ArrayList<>();
+    private ArrayList<GridButton> routeButtons = new ArrayList<>();
+
+    private Route route = new Route();
     private boolean arrayMade = false;
 
     //private Point lastPoint;
@@ -58,13 +58,18 @@ public class GridPanel extends JPanel implements MouseListener {
     }
 
     public void resetRoute() {
-        for(GridButton button : this.route) {
+        for(GridButton button : this.routeButtons) {
             button.setType(GridButton.GridButtonType.BASIC);
         }
-        this.route.clear();
+        this.routeButtons.clear();
         this.lines.clear();
+        this.route.resetRawDirections();
 
         this.repaint();
+    }
+
+    public Route getRoute() {
+        return this.route;
     }
 
     @Override
@@ -83,46 +88,6 @@ public class GridPanel extends JPanel implements MouseListener {
     public void mouseEntered(MouseEvent e){
     }
 
-//    private void clickButton(int x, int y, Point point) {
-//        if(x < 0 || y < 0 || x >= this.cols -1 || y >= this.rows -1) {
-//            System.out.println("Out of bounds i guessss");
-//            return;
-//        }
-//
-//        for(int i = 0; i < this.buttons.size(); i++) {
-//            GridButton button = this.buttons.get(i);
-//
-//            if(button.collides(point)) {
-//                // Check if is first point
-//                //if(this.route.size() == 0) {
-//                    button.setType(GridButton.GridButtonType.START);
-//                //}
-//
-//                this.repaint();
-//            }
-//        }
-//
-////        GridButton button = this.newButtons[y][x];
-////        if(button.collides(point)) {
-////            this.lastPoint = new Point(x, y);
-////
-////            //this.lastPoint = button.getPoint();
-////            button.setColor(Color.RED);
-////
-////            if(this.lastPoint != null) {
-////                GridButton oldButton = this.newButtons[(int)this.lastPoint.getY()][(int)this.lastPoint.getX()];
-////                if(oldButton != null) {
-////                    Rectangle rect= new Rectangle();
-////                    rect.setFrameFromDiagonal(button.getPoint(), oldButton.getPoint());
-////
-////                    this.lines.add(new GridLine(rect.x + 8, rect.y - 8, rect.width, rect.height));
-////                }
-////            }
-////
-////            this.repaint();
-////        }
-//    }
-
     private void createButtons() {
         if (this.arrayMade)
             return;
@@ -138,102 +103,56 @@ public class GridPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e){
-//        if(this.lastPoint == null) {
-//            for(int y = 0; y < this.rows - 1; y++) {
-//                for(int x = 0; x < this.cols - 1; x++) {
-//                    this.clickButton(x, y, e.getPoint());
-//                }
-//            }
-//        } else {
-//            int y = (int)this.lastPoint.getY();
-//            int x = (int)this.lastPoint.getX();
-//
-//            for(int yy = y - 1; yy <= y + 1; yy++) {
-//                for(int xx = x - 1; xx <= x + 1; xx++) {
-//                    System.out.println(xx);
-//                    System.out.println(yy);
-//                    this.clickButton(xx, yy, e.getPoint());
-//                }
-//            }
-//        }
-
         for(int i = 0; i < this.buttons.size(); i++) {
             GridButton button = this.buttons.get(i);
 
             if(button.collides(e.getPoint())) {
-                if(this.route.size() == 0) {
+                if(this.routeButtons.size() == 0) {
                     button.setType(GridButton.GridButtonType.START);
-                    this.directions.add(Route.RawDirection.NORTH);
-                    this.route.add(button);
+                    this.route.addRawDirection(Route.RawDirection.NORTH);
+                    this.routeButtons.add(button);
                 } else {
                     int width = this.getWidth() / this.cols;
                     int height = this.getHeight() / this.rows;
 
-                    GridButton lastButton = this.route.get(this.route.size() - 1);
-
-                    //System.out.println(Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)));
-
-                    //System.out.println(Math.sqrt(Math.pow(button.getX() - lastButton.getX(), 2) + Math.pow(button.getY() - lastButton.getY(), 2)));
+                    GridButton lastButton = this.routeButtons.get(this.routeButtons.size() - 1);
 
                     // NORTH
                     if(((lastButton.getY() - button.getY()) == height) && ((lastButton.getX() - button.getX()) == 0)) {
                         //if height is positive then: last direction - this direction
-                        button.setType(GridButton.GridButtonType.END);
-                        this.lines.add(new GridLine(lastButton.getPoint(), button.getPoint()));
-                        if(this.route.size() > 1) {
-                            lastButton.setType(GridButton.GridButtonType.POINT);
-                        }
-                        this.directions.add(Route.RawDirection.NORTH);
-                        this.route.add(button);
+                        this.addDirection(lastButton, button, Route.RawDirection.NORTH);
                     }
 
                     // EAST
                     if(lastButton.getX() - button.getX() == -width && lastButton.getY() - button.getY() == 0) {
                         //if width is negative then: last direction + this direction
-                        button.setType(GridButton.GridButtonType.END);
-                        this.lines.add(new GridLine(lastButton.getPoint(), button.getPoint()));
-                        if(this.route.size() > 1) {
-                            lastButton.setType(GridButton.GridButtonType.POINT);
-                        }
-                        this.directions.add(Route.RawDirection.EAST);
-                        this.route.add(button);
+                        this.addDirection(lastButton, button, Route.RawDirection.EAST);
                     }
 
                     // SOUTH
                     if(lastButton.getY() - button.getY() == -height && lastButton.getX() - button.getX() == 0) {
                         //if height is negative then: last direction + this direction
-                        button.setType(GridButton.GridButtonType.END);
-                        this.lines.add(new GridLine(lastButton.getPoint(), button.getPoint()));
-                        if(this.route.size() > 1) {
-                            lastButton.setType(GridButton.GridButtonType.POINT);
-                        }
-                        this.directions.add(Route.RawDirection.SOUTH);
-                        this.route.add(button);
+                        this.addDirection(lastButton, button, Route.RawDirection.SOUTH);
                     }
 
                     // WEST
                     if(lastButton.getX() - button.getX() == width && lastButton.getY() - button.getY() == 0) {
                         //if width is positive then: last direction - this direction
-                        button.setType(GridButton.GridButtonType.END);
-                        this.lines.add(new GridLine(lastButton.getPoint(), button.getPoint()));
-                        if(this.route.size() > 1) {
-                            lastButton.setType(GridButton.GridButtonType.POINT);
-                        }
-                        this.directions.add(Route.RawDirection.WEST);
-                        this.route.add(button);
+                        this.addDirection(lastButton, button, Route.RawDirection.WEST);
                     }
                 }
                 this.repaint();
             }
         }
+    }
 
-        // for(GridButton button: this.newButtons){
-        // if(button.collides(e.getPoint())){
-        // System.out.println("pressed, goed gedaaan faggot");
-        // this.route.addDirection(button, 0);
-        // button.setColor(Color.RED);
-        // this.repaint();
-        // }
-        // }
+    private void addDirection(GridButton lastButton, GridButton currentButton, Route.RawDirection direction) {
+        currentButton.setType(GridButton.GridButtonType.END);
+        this.lines.add(new GridLine(lastButton.getPoint(), currentButton.getPoint()));
+        if(this.routeButtons.size() > 1) {
+            lastButton.setType(GridButton.GridButtonType.POINT);
+        }
+        this.route.addRawDirection(direction);
+        this.routeButtons.add(currentButton);
     }
 }

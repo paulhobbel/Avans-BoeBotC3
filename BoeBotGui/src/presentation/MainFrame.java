@@ -1,5 +1,6 @@
 package presentation;
 
+import business.ProtocolHelper;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import datastorage.Bluetooth;
 import datastorage.Protocol;
@@ -116,7 +117,7 @@ public class MainFrame extends JFrame {
 
         resetButton.addActionListener(e -> gridPanel.resetRoute());
         undoButton.addActionListener(e -> System.out.println("Undo: " + e));
-        sendButton.addActionListener(e -> System.out.println("Send: " + e));
+        sendButton.addActionListener(e -> ProtocolHelper.sendRoute(gridPanel.getRoute()));
 
         resetButton.setPreferredSize(new Dimension(100, 50));
         undoButton.setPreferredSize(new Dimension(100, 50));

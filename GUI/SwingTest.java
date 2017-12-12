@@ -11,6 +11,7 @@ public class SwingTest{
     public SwingTest(){
         this.pane = pane;
         make.connection();
+        createGUI();
     }
     private void addStuffToPain(Container pane){
         this.pane = pane;
@@ -71,7 +72,7 @@ public class SwingTest{
     public void main(String[] args){
         SwingUtilities.invokeLater(new Runnable() {
             public void run(){
-                createGUI();
+                
             }
         });
     }

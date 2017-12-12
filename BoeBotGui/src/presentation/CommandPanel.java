@@ -1,11 +1,9 @@
 package presentation;
 
 import business.ProtocolHelper;
-import datastorage.Protocol;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class CommandPanel extends JPanel{
     public CommandPanel() {

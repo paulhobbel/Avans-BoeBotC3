@@ -31,6 +31,10 @@ public class Notification
     public void playSound(Sound sound) {
         this.soundContext.setSound(sound);
     }
+    
+    public void playlist(Sound sound) {
+        this.soundContext.setPlaylist(sound);
+    }
 
     /**
      * Get the LedContext.
@@ -90,12 +94,33 @@ public class Notification
         }
         
         /**
+         * Add to the current sound state.
+         * 
+         * @param sound set sound
+         */
+        public void setPlaylist(Sound sound) {
+            this.currentSound = sound;
+            this.currentSound.play(this);
+            this.speaker.addTone(Tone.SONG_WAIT);
+        }
+        
+        /**
          * Add a new tone to play.
          * 
          * @param tone The tone to play
          */
         public void addTone(Tone tone) {
             this.speaker.addTone(tone);
+        }
+        
+        /**
+         * Add a new tone to play.
+         * 
+         * @param tone The tone to play
+         */
+        public void addToneMusic(Tone tone) {
+            this.speaker.addTone(tone);
+            this.speaker.addTone(Tone.LITTLE_WAIT);
         }
         
         /**

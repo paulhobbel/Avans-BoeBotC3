@@ -17,7 +17,6 @@ public class MainFrame extends JFrame {
 
     private JPanel contentLeft;
     private JPanel contentMiddle;
-    private JPanel contentRight;
 
     private static TerminalFrame terminal = new TerminalFrame();
 
@@ -44,8 +43,8 @@ public class MainFrame extends JFrame {
 
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int)screenSize.getWidth() - 600;
-        int height = (int)screenSize.getHeight() - 80;
+        int width = (int)screenSize.getWidth() - 900;
+        int height = (int)screenSize.getHeight() - 300;
         this.setSize(width, height);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,7 +58,9 @@ public class MainFrame extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu optionsMenu = new JMenu("Options");
+        JMenu toolsMenu = new JMenu("Tools");
         JMenu helpMenu = new JMenu("Help");
+
 
 
         JMenu optionsCOMSubMenu = new JMenu("COM settings");
@@ -68,6 +69,10 @@ public class MainFrame extends JFrame {
         JCheckBoxMenuItem optionsTermalCheckboxItem = new JCheckBoxMenuItem("Show Terminal");
         optionsMenu.add(optionsTermalCheckboxItem);
         optionsTermalCheckboxItem.addActionListener(e -> this.terminal.setVisible(true));
+
+        JMenu musicPlayer = new JMenu("Music Player");
+
+        toolsMenu.add(musicPlayer);
 
         JMenuItem helpAboutMenuItem = new JMenuItem("About the BoeBot...");
         helpAboutMenuItem.addActionListener(e -> makeHelpScreen());
@@ -94,6 +99,7 @@ public class MainFrame extends JFrame {
 //        }
 
         menuBar.add(optionsMenu);
+        menuBar.add(toolsMenu);
         menuBar.add(helpMenu);
 
         this.setJMenuBar(menuBar);

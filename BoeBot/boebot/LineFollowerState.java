@@ -49,7 +49,7 @@ public class LineFollowerState extends State {
 
     public void update(StateContext context) {
         if(!this.busy) {
-            if(this.lineFollower.onCrossing()) {
+            if(this.lineFollower.onCrossing() || this.turnOnly) {
                 if(getDirection() != RelativeDirection.NOTHING) {
                     this.counter = 0;
                     crossingUpdate();
@@ -59,6 +59,7 @@ public class LineFollowerState extends State {
                 else {
                     System.out.println("Done with the directions. Starting over...");
                     //followLine();
+                    this.transmission.brake(MEDIUM);
                     context.setState(new IdleState());
                 }
             }
@@ -86,19 +87,23 @@ public class LineFollowerState extends State {
     }
 
     private RelativeDirection getDirection() {
+        System.out.println("size: " + this.directions.size() + " index: " + this.directionIndex);
+        
+        if(this.directions.size()-1 == this.directionIndex) {
+            this.turnOnly = true;
+            System.out.println("turnOnly");
+        } 
+        
         if(this.directions.size() <= this.directionIndex) {
             //this.currentDirection = -1;
             this.currentDirection = RelativeDirection.NOTHING;
-            this.directionIndex = 0;
+            //this.directionIndex = 0;
         }
         else {
             this.currentDirection = this.directions.get(this.directionIndex);
             this.directionIndex++;
         }
-        
-        if(this.directions.size() - 2 == this.directionIndex) {
-            this.turnOnly = true;
-        } 
+        System.out.println(this.currentDirection);
         return this.currentDirection;
     }
 
@@ -112,8 +117,10 @@ public class LineFollowerState extends State {
         switch(this.currentDirection) {
             case LEFT: //left
             if (this.counter == 0) {
-                if(this.turnOnly)
+                if(this.turnOnly) {
+                    System.out.println("turnOnly Drive");
                     this.transmission.left(SLOW);
+                }
                 else
                     this.transmission.speed(Constants.TP, 100);
             }
@@ -135,7 +142,7 @@ public class LineFollowerState extends State {
             case RIGHT: //right
             if (this.counter == 0) {
                 if(this.turnOnly)
-                    this.transmission.left(SLOW);
+                    this.transmission.right(SLOW);
                 else
                     this.transmission.speed(Constants.TP, 100);
             }
@@ -149,7 +156,7 @@ public class LineFollowerState extends State {
             case BACKWARDS: //backwards
             if (this.counter == 0) {
                 if(this.turnOnly)
-                    this.transmission.left(SLOW);
+                    this.transmission.right(SLOW);
                 else
                     this.transmission.speed(Constants.TP, 100);
             }

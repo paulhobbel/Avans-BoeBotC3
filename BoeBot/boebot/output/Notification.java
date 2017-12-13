@@ -100,8 +100,8 @@ public class Notification
          */
         public void setPlaylist(Sound sound) {
             this.currentSound = sound;
-            this.currentSound.play(this);
             this.speaker.addTone(Tone.SONG_WAIT);
+            this.currentSound.play(this);
         }
         
         /**

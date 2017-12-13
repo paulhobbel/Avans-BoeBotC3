@@ -20,11 +20,12 @@ public class Route
     {
 
     }
-    
+
     public void addDirection(RelativeDirection direction) {
+
         this.directions.add(direction);
     }
-    
+
     public ArrayList<RelativeDirection> getDirections() {
         return this.directions;
     }
@@ -32,12 +33,16 @@ public class Route
     public static Route fromStringArray(String[] directions) {
         Route route = new Route();
         for(String direction : directions) {
-            route.addDirection(RelativeDirection.valueOf(direction));
+            try {
+                route.addDirection(RelativeDirection.valueOf(direction));
+            } catch(Exception e) {
+                // Probs got an unsupported direction, just log for now...
+                System.out.println(e);
+            }
         }
-        
         return route;
     }
-    
+
     public enum RelativeDirection {
         LEFT,
         FORWARDS,

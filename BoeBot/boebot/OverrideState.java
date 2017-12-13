@@ -55,22 +55,7 @@ public class OverrideState extends State
             }
         });
         
-        context.setBluetoothListener(new BluetoothListener()
-        {
-            @Override
-            public void onProtocolMessage(Protocol message) {
-                // if(command.equals(Command.STANDBY)) {
-                    // context.setState(new IdleState());
-                // } else if(command.equals(Command.FIGURE_EIGHT)) {
-                    // context.setState(new EightState());
-                // }else {
-                    // handleCommand(command);
-                // }
-                System.out.println(message);
-                System.out.println(message.getFunction());
-                System.out.println(message.getData() == "40");
-            }
-        });
+        
     }
 
     public void update(StateContext context) {

@@ -95,7 +95,7 @@ public class Constants
     /**
      * Linefollower constant: The base speed moving in a straight line
      */
-    public static final int TP = 70;
+    public static final int TP = 90;
     
     /**
      * Linefollower constant: Dampning the integral

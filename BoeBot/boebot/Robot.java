@@ -28,12 +28,12 @@ public class Robot {
     
     private ListenerRunnable<RemoteEvent> remote;
     private ListenerRunnable<UltrasoneEvent> ultrasone;
-    private Bluetooth bluetooth;
+    //private Bluetooth bluetooth;
     
     public Robot() {
         this.remote = new Remote(Constants.REMOTE_PIN);
         this.ultrasone = new Ultrasone(Constants.ULTRASONE_TRIGGER_PIN, Constants.ULTRASONE_ECHO_PIN);
-        this.bluetooth = new Bluetooth();
+        //this.bluetooth = new Bluetooth();
         
         this.threads.add(new Thread(this.ultrasone));
         this.threads.add(new Thread(this.remote));
@@ -65,7 +65,7 @@ public class Robot {
     }
     
     public Bluetooth getBluetooth() {
-        return this.bluetooth;
+        return null;
     }
     
     /**

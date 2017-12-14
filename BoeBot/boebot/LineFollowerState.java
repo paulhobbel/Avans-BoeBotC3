@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import TI.*;
 
 import boebot.hardware.LightSensor;
+import boebot.hardware.Ultrasone.UltrasoneEvent;
 import static boebot.Transmission.Speed.*;
 import boebot.hardware.Engine;
+import boebot.output.MerryChristmas;
 import boebot.Constants;
 
 import boebot.Route.RelativeDirection;
+import boebot.LineFollower.LineFollowerEventListener;
 
 /**
  * Write a description of class StateLineFollower here.
@@ -45,6 +48,25 @@ public class LineFollowerState extends State {
         //directions = new int[]{1, 3}; //line
 
         this.directions = route.getDirections();
+        
+        this.lineFollower.setEventListener(new LineFollowerEventListener()
+        {
+            @Override
+            public void onCrossing() {
+                
+            }
+            
+            @Override
+            public void onLine() {
+                
+            }
+            
+            @Override
+            public void onLineNoError() {
+                
+            }
+        });
+        
     }
 
     public void update(StateContext context) {
@@ -78,6 +100,16 @@ public class LineFollowerState extends State {
         this.busy = false;
         this.turnOnly = false;
         this.counter = 0;
+       
+        context.setUltrasoneListener(new UltrasoneEvent()
+        {
+            @Override
+            public void onDistance(int distance) {
+                if(distance != -1 && distance < Constants.COLLISION_DISTANCE) {
+                    context.setState(new CollisionState());
+                }
+            }
+        });
     }
 
     private void followLine() {

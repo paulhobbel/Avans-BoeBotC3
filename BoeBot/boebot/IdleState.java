@@ -7,6 +7,7 @@ import TI.*;
 import boebot.Transmission;
 import boebot.output.Tone;
 import static boebot.Transmission.Speed.*;
+import boebot.output.MerryChristmas;
 
 /**
  * Write a description of class IdleState here.
@@ -55,6 +56,8 @@ public class IdleState extends State
         
         // final Tone tone = Tone.A;
         // tone.setDuration(1000);
+
+        context.getNotification().playlist(new MerryChristmas());
         
         // context.getNotification().playSound(sContext -> sContext.addTone(tone));
     }

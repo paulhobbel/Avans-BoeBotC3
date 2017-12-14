@@ -109,6 +109,15 @@ public class Notification
          * 
          * @param tone The tone to play
          */
+        public void removeAllTones() {
+            this.speaker.removeAllTones();
+        }
+        
+        /**
+         * Add a new tone to play.
+         * 
+         * @param tone The tone to play
+         */
         public void addTone(Tone tone) {
             this.speaker.addTone(tone);
         }

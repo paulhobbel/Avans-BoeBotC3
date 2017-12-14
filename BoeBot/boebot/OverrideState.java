@@ -36,7 +36,7 @@ public class OverrideState extends State
             @Override
             public void onDistance(int distance) {
                 if(distance != -1 && distance < Constants.COLLISION_DISTANCE) {
-                    //context.setState(new CollisionState());
+                    context.setState(new CollisionState());
                 }
             }
         });

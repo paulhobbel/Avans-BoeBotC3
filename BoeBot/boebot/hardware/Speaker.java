@@ -61,15 +61,19 @@ public class Speaker implements Runnable {
      */
     public void run() {
         while(true) {
-            if(this.tones.size() > 0) {
-                Tone tone = this.tones.get(0);
-                int freq = tone.getFrequency();
-                if(freq != 0) {
-                    BoeBot.freqOut(this.pin, (int)((tone.getFrequency() - 27) / 86.4 * 100), tone.getDuration());
-                } else {
-                    BoeBot.wait(tone.getDuration());
+            try {
+                if(this.tones.size() > 0) {
+                    Tone tone = this.tones.get(0);
+                    int freq = tone.getFrequency();
+                    if(freq != 0) {
+                        BoeBot.freqOut(this.pin, (int)((tone.getFrequency() - 27) / 86.4 * 100), tone.getDuration());
+                    } else {
+                        BoeBot.wait(tone.getDuration());
+                    }
+                    this.tones.remove(0);
                 }
-                this.tones.remove(0);
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
             }
             BoeBot.wait(1);
         }

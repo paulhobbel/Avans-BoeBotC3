@@ -33,6 +33,8 @@ public class LineFollower
     private LightSensor lightSensorMiddle;
     private LightSensor lightSensorRight;
     
+    private LineFollowerEventListener listener;
+    
     public LineFollower()
     {
         lightSensorLeft = new LightSensor(Constants.LIGHT_RIGHT_PIN);
@@ -140,5 +142,31 @@ public class LineFollower
 
     public int getTimeRight() {
         return this.timeRight;
+    }
+    
+    public void setEventListener(LineFollowerEventListener listener) {
+        this.listener = listener;
+    }
+    
+    public void update() {
+        if(this.listener != null) {
+            if(this.onCrossing()) {
+                this.listener.onCrossing();
+            }
+            
+            if(this.onLine()) {
+                this.listener.onLine();
+            }
+            
+            if(this.onLineNoError()) {
+                this.listener.onLineNoError();
+            }
+        }
+    }
+    
+    public interface LineFollowerEventListener {
+        public void onCrossing();
+        public void onLine();
+        public void onLineNoError();
     }
 }

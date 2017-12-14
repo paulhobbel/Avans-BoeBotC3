@@ -94,6 +94,8 @@ public class StateContext extends Updatable
         this.setProtocolRouteListener(null);
         this.setUltrasoneListener(null);
         
+        this.notification.getSoundContext().removeAllTones();
+        
         newState.init(this);
         this.stateHistory.add(0, newState);
         

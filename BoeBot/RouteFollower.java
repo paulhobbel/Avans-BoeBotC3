@@ -1,23 +1,26 @@
+ 
+
+ 
+
 
 /**
- * Write a description of class Paul here.
+ * Write a description of class RouteFollower here.
  *
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Paul
+public class RouteFollower
 {
     // instance variables - replace the example below with your own
     private int x;
 
     /**
-     * Constructor for objects of class Paul
+     * Constructor for objects of class RouteFollower
      */
-    public Paul()
+    public RouteFollower()
     {
         // initialise instance variables
         x = 0;
-        // iets
     }
 
     /**

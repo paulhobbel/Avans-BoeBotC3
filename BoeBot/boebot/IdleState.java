@@ -1,11 +1,13 @@
 package boebot;
 
 import java.awt.Color;
+import java.util.*;
 import TI.*;
 
 import boebot.Transmission;
 import boebot.output.Tone;
 import static boebot.Transmission.Speed.*;
+import boebot.output.MerryChristmas;
 
 /**
  * Write a description of class IdleState here.
@@ -37,20 +39,25 @@ public class IdleState extends State
             }
         );
 
-        context.setBluetoothListener(message ->
-            {
-                // if(command.equals(Command.STANDBY)) {
-                    // context.setState(new OverrideState());
-                // }
-                System.out.println(message);
-                System.out.println(message.getFunction());
-                System.out.println(message.getData());
-            }
-        );
+        // context.setBluetoothListener(message ->
+            // {
+                // // if(command.equals(Command.STANDBY)) {
+                    // // context.setState(new OverrideState());
+                // // }
+                // System.out.println(message);
+                // System.out.println(message.getFunction());
+                // System.out.println(message.getData());
+            // }
+        // );
+        
+        context.setProtocolRouteListener(route -> context.setState(new LineFollowerState(route)));
+        
         this.transmission.brake(MEDIUM);
         
         // final Tone tone = Tone.A;
         // tone.setDuration(1000);
+
+        context.getNotification().playlist(new MerryChristmas());
         
         // context.getNotification().playSound(sContext -> sContext.addTone(tone));
     }

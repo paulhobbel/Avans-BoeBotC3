@@ -3,6 +3,8 @@ package boebot;
 import java.util.ArrayList;
 import java.awt.Color;
 
+import boebot.ProtocolHelper.ProtocolRouteListener;
+
 import boebot.output.Notification;
 
 import boebot.hardware.Remote.RemoteEvent;
@@ -29,6 +31,7 @@ public class StateContext extends Updatable
     private Robot robot;
     
     private Notification notification;
+    private ProtocolHelper protocolHelper;
     
     /**
      * An array of all past states, were the current state will be on index 0
@@ -47,6 +50,7 @@ public class StateContext extends Updatable
         this.robot = robot;
         
         this.notification = new Notification();
+        this.protocolHelper = new ProtocolHelper();
         
         initialState.init(this);
         this.stateHistory.add(0, initialState);
@@ -74,16 +78,23 @@ public class StateContext extends Updatable
         this.robot.getUltrasone().setListener(listener);
     }
     
-    public void setBluetoothListener(BluetoothListener listener) {
-        this.robot.getBluetooth().setListener(listener);
+    // public void setBluetoothListener(BluetoothListener listener) {
+        // this.robot.getBluetooth().setListener(listener);
+    // }
+    
+    public void setProtocolRouteListener(ProtocolRouteListener listener) {
+        System.out.println("Set listener.");
+        this.protocolHelper.setRouteListener(listener);
     }
     
     public void setState(State newState) {
         // TODO: Maybe check in the stateHistory if we still have this state.
         
         this.setRemoteListener(null);
-        this.setBluetoothListener(null);
+        this.setProtocolRouteListener(null);
         this.setUltrasoneListener(null);
+        
+        this.notification.getSoundContext().removeAllTones();
         
         newState.init(this);
         this.stateHistory.add(0, newState);
@@ -109,7 +120,7 @@ public class StateContext extends Updatable
         this.stateHistory.remove(0);
         
         this.setRemoteListener(null);
-        this.setBluetoothListener(null);
+        this.setProtocolRouteListener(null);
         this.setUltrasoneListener(null);
         
         // The previous state is now at index 0

@@ -43,25 +43,6 @@ public class Bluetooth extends Updatable
     }
 
     /**
-     * Send log with level info to GUI.
-     * 
-     * @param log The message to be send
-     */
-    public void sendLog(String log) {
-        this.sendLog("INFO", log);
-    }
-
-    /**
-     * Send log to GUI.
-     * 
-     * @param level The level (info, warn, debug, Exception)
-     * @param log The message to be send
-     */
-    public void sendLog(String level, String message) {
-        this.sendProtocol(Protocol.LOG, level, message);
-    }
-
-    /**
      * Send a protocol message over Bluetooth.
      * 
      * @param protocol The protocol
@@ -97,15 +78,11 @@ public class Bluetooth extends Updatable
 
                 System.out.println("[DEBUG]: Got protocol message: " + protocolMessage);
                 if(this.listener != null) {
-                    this.listener.onProtocolMessage(Protocol.convertMessage(protocolMessage));
-                    this.sendLog("OK");
+                    //this.listener.onProtocolMessage(Protocol.convertMessage(protocolMessage));
+                    this.listener.onMessage(protocolMessage);
                 }
             } catch(UnsupportedEncodingException ex) {
                 System.out.println(ex);
-            } catch(Exception ex) {
-                System.out.println(ex);
-                
-                this.sendLog("ERROR", ex.getMessage());
             }
 
             this.buffer.clear();
@@ -125,7 +102,7 @@ public class Bluetooth extends Updatable
     }
 
     public interface BluetoothListener {
-        public void onProtocolMessage(Protocol message);
+        public void onMessage(String message);
     }
     
     public enum Protocol {

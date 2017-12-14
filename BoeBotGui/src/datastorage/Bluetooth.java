@@ -34,6 +34,12 @@ public class Bluetooth {
     }
     public static void addEventListener(SerialPortEventListener listener){
         try {
+            serialPort.removeEventListener();
+        } catch (SerialPortException e) {
+            //e.printStackTrace();
+            // Ignore this error completely!
+        }
+        try {
             serialPort.addEventListener(listener);
         } catch (SerialPortException e) {
             e.printStackTrace();

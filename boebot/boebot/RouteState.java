@@ -1,19 +1,15 @@
 package boebot;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.ArrayList;
+import java.util.*;
 import TI.*;
 
 import boebot.hardware.LightSensor;
-import boebot.hardware.Ultrasone.UltrasoneEvent;
+import boebot.Route;
+import boebot.Route.RelativeDirection;
 import static boebot.Transmission.Speed.*;
 import boebot.hardware.Engine;
-import boebot.output.MerryChristmas;
 import boebot.Constants;
-
-import boebot.Route.RelativeDirection;
-import boebot.LineFollower.LineFollowerEventListener;
 
 /**
  * Write a description of class StateLineFollower here.
@@ -26,71 +22,64 @@ import boebot.LineFollower.LineFollowerEventListener;
  * @author Boudewijn Groeneboer
  * @version 05-12-2017 (Version 1.0)
  */
-public class LineFollowerState extends State {
+public class RouteState extends State {
     private Transmission transmission;
     private LineFollower lineFollower;
 
     private boolean busy = false;
-    private int counter = 0;
+    private boolean done = false;
     private boolean turnOnly = false;
-    //private int currentDirection;
+    private boolean offTrack = false;
+    private int counter = 0;
     private RelativeDirection currentDirection;
-    //private int[] directions;
     private ArrayList<RelativeDirection> directions;
     private int directionIndex = 0;
 
-    public LineFollowerState(Route route) {
+    public RouteState(Route route) {
         this.transmission = new Transmission();
         this.lineFollower = new LineFollower();
-
+        this.directions = route.getDirections();
         //directions = new int[]{2, 0, 0, 0, 0, 2, 2, 2}; //eight
         //directions = new int[]{1, 2, 1, 2, 1, 2, 1, 2}; //square
-        //directions = new int[]{1, 3}; //line
-
-        this.directions = route.getDirections();
-        
-        this.lineFollower.setEventListener(new LineFollowerEventListener()
-        {
-            @Override
-            public void onCrossing() {
-                
-            }
-            
-            @Override
-            public void onLine() {
-                
-            }
-            
-            @Override
-            public void onLineNoError() {
-                
-            }
-        });
-        
+        //directions = new int[]{1, 1, 1, 3}; //line
+        //directions = new int[]{2, 0, 2, 0, 2, 2, 2, 0, 2, 0, 2, 2}; //squiggle
+        //directions = new int[]{2, 2, 1, 2, 2, 2, 1, 1, 3, 1, 1, 2}; //something
+        //directions = new int[]{0, 0, 2, 3, 0, 0, 2, 3, 0, 0, 2, 3, 0, 0, 2, 3}; //another thing
     }
 
     public void update(StateContext context) {
-        if(!this.busy) {
-            if(this.lineFollower.onCrossing() || this.turnOnly) {
-                if(getDirection() != RelativeDirection.NOTHING) {
-                    this.counter = 0;
-                    crossingUpdate();
-                    this.busy = true;
-                    System.out.println("Crossing...");
+        if(!this.offTrack) {
+            if(!this.busy) {
+                if(this.lineFollower.onCrossing()) {
+                    getDirection();
+                    if(!done) {
+                        this.counter = 0;
+                        crossingUpdate();
+                        this.busy = true;
+                        System.out.println("Crossing...");
+                    }
+                    else {
+                        System.out.println("Done with the directions");
+                        this.transmission.brake(SLOW);
+                        this.directionIndex = 0;
+                        followLine();
+                    }
+                }
+                else if(this.lineFollower.offTrack()) {
+                    this.offTrack = true;
+                    System.out.println("OffTrack: " + this.lineFollower.offTrack());
+                    this.transmission.speed(0, 50);
                 }
                 else {
-                    System.out.println("Done with the directions. Starting over...");
-                    //followLine();
-                    this.transmission.brake(MEDIUM);
-                    context.setState(new IdleState());
+                    followLine();
                 }
             }
             else {
-                followLine();
+                crossingUpdate();
             }
         }
-        else {
-            crossingUpdate();
+        else if(!this.lineFollower.offTrack()) {
+            this.offTrack = false;
         }
         this.transmission.update();
     }
@@ -98,18 +87,9 @@ public class LineFollowerState extends State {
     public void init(StateContext context) {
         context.setColor(Color.WHITE);
         this.busy = false;
+        this.done = false;
         this.turnOnly = false;
         this.counter = 0;
-       
-        context.setUltrasoneListener(new UltrasoneEvent()
-        {
-            @Override
-            public void onDistance(int distance) {
-                if(distance != -1 && distance < Constants.COLLISION_DISTANCE) {
-                    context.setState(new CollisionState());
-                }
-            }
-        });
     }
 
     private void followLine() {
@@ -119,44 +99,35 @@ public class LineFollowerState extends State {
     }
 
     private RelativeDirection getDirection() {
-        System.out.println("size: " + this.directions.size() + " index: " + this.directionIndex);
-        
-        if(this.directions.size()-1 == this.directionIndex) {
-            this.turnOnly = true;
-            System.out.println("turnOnly");
-        } 
-        
         if(this.directions.size() <= this.directionIndex) {
-            //this.currentDirection = -1;
-            this.currentDirection = RelativeDirection.NOTHING;
-            //this.directionIndex = 0;
+            this.done = true;
+        }
+        else if(this.directions.size() - 1 <= this.directionIndex) {
+            this.turnOnly = true;
         }
         else {
             this.currentDirection = this.directions.get(this.directionIndex);
             this.directionIndex++;
         }
-        System.out.println(this.currentDirection);
         return this.currentDirection;
     }
 
     private void crossingUpdate()  {
         /*
-         * times for TP = 25:       TP = 75
-         * turn : 0, 250, 500       0, 70, 500
-         * 180:   0, 250, 1500      0, 70, 1500
+         * times for TP = 25:       TP = 75         TP = 90
+         * turn : 0, 250, 500       0, 70, 500      0, 50, 500
+         * 180:   0, 250, 1500      0, 70, 1500     0, 50, 1500
          */
 
         switch(this.currentDirection) {
             case LEFT: //left
             if (this.counter == 0) {
-                if(this.turnOnly) {
-                    System.out.println("turnOnly Drive");
+                if(this.turnOnly)
                     this.transmission.left(SLOW);
-                }
                 else
                     this.transmission.speed(Constants.TP, 100);
             }
-            else if (this.counter == 70)
+            else if (this.counter == 50)
                 this.transmission.left(SLOW);
             else if (this.counter >= 500 && this.lineFollower.onLineNoError())
                 this.busy = false;
@@ -166,7 +137,7 @@ public class LineFollowerState extends State {
             case FORWARDS: //forwards
             if (this.counter == 0)
                 this.transmission.speed(Constants.TP, 100);
-            else if (this.counter >= 100)
+            else if (this.counter >= 50)
                 this.busy = false;
             this.counter++;
             break;
@@ -174,11 +145,11 @@ public class LineFollowerState extends State {
             case RIGHT: //right
             if (this.counter == 0) {
                 if(this.turnOnly)
-                    this.transmission.right(SLOW);
+                    this.transmission.left(SLOW);
                 else
                     this.transmission.speed(Constants.TP, 100);
             }
-            else if (this.counter == 70)
+            else if (this.counter == 50)
                 this.transmission.right(SLOW);
             else if (this.counter >= 500 && this.lineFollower.onLineNoError())
                 this.busy = false;
@@ -188,15 +159,19 @@ public class LineFollowerState extends State {
             case BACKWARDS: //backwards
             if (this.counter == 0) {
                 if(this.turnOnly)
-                    this.transmission.right(SLOW);
+                    this.transmission.left(SLOW);
                 else
                     this.transmission.speed(Constants.TP, 100);
             }
-            else if (this.counter == 70)
+            else if (this.counter == 50)
                 this.transmission.right(SLOW);
             else if (this.counter >= 1500 && this.lineFollower.onLineNoError())
                 this.busy = false;
             this.counter++;
+            break;
+
+            case NOTHING: //nothing
+            this.busy = false;
             break;
         }
     }

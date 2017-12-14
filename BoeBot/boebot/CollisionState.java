@@ -47,11 +47,13 @@ public class CollisionState extends State
                 @Override
                 public void onDistance(int distance) {
                     if(distance != -1 && distance > Constants.COLLISION_DISTANCE) {
-                        context.goBack();
+                        context.setState(new IdleState());
                     }
                 }
             }
         );
+        
+        context.setProtocolRouteListener(route -> context.setState(new LineFollowerState(route)));
         
         // Change the listener of the remote IR
         context.setRemoteListener(new RemoteEvent()

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>Main</OriginalElement>
+  <nodes>
+    <node x="10.5" y="659.5">presentation.TerminalFrame</node>
+    <node x="197.5" y="425.0">datastorage.Bluetooth</node>
+    <node x="1080.0029870129872" y="168.5">business.Route.RelativeDirection</node>
+    <node x="940.875" y="1025.0">presentation.GridPanel</node>
+    <node x="27.30379870129866" y="101.0">datastorage.Protocol</node>
+    <node x="911.0" y="447.0">business.Route</node>
+    <node x="364.5" y="1180.0">presentation.CommandPanel</node>
+    <node x="468.0" y="737.5">business.ProtocolHelper</node>
+    <node x="1277.8125" y="458.5">presentation.GridButton.GridButtonType</node>
+    <node x="162.0317857142859" y="0.0">datastorage.ProtocolException</node>
+    <node x="1493.8469155844157" y="1179.5">presentation.StatusPanel</node>
+    <node x="1287.3469155844157" y="659.0">presentation.GridButton</node>
+    <node x="1519.3469155844157" y="759.5">presentation.StatusPanel.BoeBotState</node>
+    <node x="942.0029870129872" y="179.5">business.Route.RawDirection</node>
+    <node x="486.25" y="1812.0">Main</node>
+    <node x="704.0" y="747.0">presentation.GridLine</node>
+    <node x="464.75" y="1511.0">presentation.MainFrame</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="presentation.GridButton" target="presentation.GridButton.GridButtonType">
+      <point x="-53.0" y="-148.0" />
+      <point x="1340.3469155844157" y="639.0" />
+      <point x="1343.8125" y="639.0" />
+      <point x="0.0" y="58.5" />
+    </edge>
+    <edge source="presentation.MainFrame" target="presentation.CommandPanel">
+      <point x="0.0" y="-125.5" />
+      <point x="68.75" y="48.0" />
+    </edge>
+    <edge source="presentation.TerminalFrame" target="datastorage.Protocol">
+      <point x="0.0" y="-147.5" />
+      <point x="177.0" y="639.0" />
+      <point x="147.3098701298702" y="639.0" />
+      <point x="147.3098701298702" y="405.0" />
+      <point x="159.30379870129866" y="405.0" />
+      <point x="0.0" y="137.0" />
+    </edge>
+    <edge source="presentation.CommandPanel" target="business.ProtocolHelper">
+      <point x="0.0" y="-48.0" />
+      <point x="502.0" y="1005.0" />
+      <point x="522.0" y="1005.0" />
+      <point x="-54.0" y="69.5" />
+    </edge>
+    <edge source="presentation.TerminalFrame" target="datastorage.Bluetooth">
+      <point x="111.0" y="-147.5" />
+      <point x="288.0" y="639.0" />
+      <point x="249.66666666666669" y="639.0" />
+      <point x="-104.33333333333331" y="92.0" />
+    </edge>
+    <edge source="presentation.MainFrame" target="datastorage.Bluetooth">
+      <point x="-38.545454545454504" y="-125.5" />
+      <point x="532.2045454545455" y="1461.0" />
+      <point x="354.0" y="1461.0" />
+      <point x="0.0" y="92.0" />
+    </edge>
+    <edge source="presentation.MainFrame" target="presentation.StatusPanel">
+      <point x="77.09090909090912" y="-125.5" />
+      <point x="647.8409090909091" y="1481.0" />
+      <point x="1534.5969155844157" y="1481.0" />
+      <point x="-40.75" y="48.5" />
+    </edge>
+    <edge source="business.ProtocolHelper" target="datastorage.Bluetooth">
+      <point x="-72.0" y="-69.5" />
+      <point x="504.0" y="639.0" />
+      <point x="458.3333333333333" y="639.0" />
+      <point x="104.33333333333331" y="92.0" />
+    </edge>
+    <edge source="business.Route.RawDirection" target="business.Route">
+      <point x="44.25" y="58.5" />
+      <point x="1045.2529870129872" y="405.0" />
+      <point x="1082.5" y="405.0" />
+      <point x="0.0" y="-70.0" />
+    </edge>
+    <edge source="Main" target="presentation.MainFrame">
+      <point x="0.0" y="-25.5" />
+      <point x="0.0" y="125.5" />
+    </edge>
+    <edge source="presentation.MainFrame" target="datastorage.Protocol">
+      <point x="-96.36363636363637" y="-125.5" />
+      <point x="474.3863636363636" y="1491.0" />
+      <point x="0.0" y="1491.0" />
+      <point x="0.0" y="405.0" />
+      <point x="53.70379870129864" y="405.0" />
+      <point x="-105.60000000000002" y="137.0" />
+    </edge>
+    <edge source="presentation.StatusPanel" target="presentation.StatusPanel.BoeBotState">
+      <point x="-40.75" y="-48.5" />
+      <point x="1534.5969155844157" y="1005.0" />
+      <point x="1547.3469155844157" y="1005.0" />
+      <point x="-28.0" y="47.5" />
+    </edge>
+    <edge source="presentation.GridPanel" target="presentation.GridLine">
+      <point x="-134.18181818181824" y="-203.0" />
+      <point x="991.1931818181818" y="995.0" />
+      <point x="797.0" y="995.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="presentation.GridPanel" target="business.Route.RawDirection">
+      <point x="-67.09090909090901" y="-203.0" />
+      <point x="1058.284090909091" y="975.0" />
+      <point x="900.5" y="975.0" />
+      <point x="900.5" y="395.0" />
+      <point x="956.7529870129872" y="395.0" />
+      <point x="-44.25" y="58.5" />
+    </edge>
+    <edge source="business.Route" target="business.Route.RelativeDirection">
+      <point x="68.59999999999991" y="-70.0" />
+      <point x="1151.1" y="405.0" />
+      <point x="1114.2529870129872" y="405.0" />
+      <point x="-34.25" y="69.5" />
+    </edge>
+    <edge source="datastorage.Bluetooth" target="datastorage.Protocol">
+      <point x="-78.25" y="-92.0" />
+      <point x="275.75" y="405.0" />
+      <point x="212.10379870129867" y="405.0" />
+      <point x="52.80000000000001" y="137.0" />
+    </edge>
+    <edge source="business.Route.RelativeDirection" target="business.Route">
+      <point x="34.25" y="69.5" />
+      <point x="1182.7529870129872" y="405.0" />
+      <point x="1219.7" y="405.0" />
+      <point x="137.20000000000005" y="-70.0" />
+    </edge>
+    <edge source="datastorage.Bluetooth" target="datastorage.ProtocolException">
+      <point x="78.25" y="-92.0" />
+      <point x="432.25" y="405.0" />
+      <point x="500.2537987012986" y="405.0" />
+      <point x="500.2537987012986" y="76.0" />
+      <point x="317.2817857142859" y="76.0" />
+      <point x="51.75" y="25.5" />
+    </edge>
+    <edge source="presentation.StatusPanel.BoeBotState" target="presentation.StatusPanel">
+      <point x="28.0" y="47.5" />
+      <point x="1603.3469155844157" y="1005.0" />
+      <point x="1616.0969155844157" y="1005.0" />
+      <point x="40.75" y="-48.5" />
+    </edge>
+    <edge source="presentation.GridPanel" target="presentation.GridButton">
+      <point x="134.18181818181824" y="-203.0" />
+      <point x="1259.5568181818182" y="995.0" />
+      <point x="1393.3469155844157" y="995.0" />
+      <point x="0.0" y="148.0" />
+    </edge>
+    <edge source="presentation.MainFrame" target="presentation.GridPanel">
+      <point x="38.545454545454504" y="-125.5" />
+      <point x="609.2954545454545" y="1461.0" />
+      <point x="1033.125" y="1461.0" />
+      <point x="-92.25" y="203.0" />
+    </edge>
+    <edge source="business.Route" target="business.Route.RawDirection">
+      <point x="-68.60000000000002" y="-70.0" />
+      <point x="1013.9" y="405.0" />
+      <point x="1015.7529870129872" y="405.0" />
+      <point x="14.75" y="58.5" />
+    </edge>
+    <edge source="presentation.GridButton.GridButtonType" target="presentation.GridButton">
+      <point x="44.0" y="58.5" />
+      <point x="1387.8125" y="639.0" />
+      <point x="1446.3469155844157" y="639.0" />
+      <point x="53.0" y="-148.0" />
+    </edge>
+    <edge source="presentation.GridPanel" target="presentation.GridButton.GridButtonType">
+      <point x="67.09090909090901" y="-203.0" />
+      <point x="1192.465909090909" y="1005.0" />
+      <point x="1212.215487012987" y="1005.0" />
+      <point x="1212.215487012987" y="639.0" />
+      <point x="1299.8125" y="639.0" />
+      <point x="-44.0" y="58.5" />
+    </edge>
+    <edge source="datastorage.Protocol" target="datastorage.ProtocolException">
+      <point x="0.0" y="-137.0" />
+      <point x="159.30379870129866" y="76.0" />
+      <point x="213.7817857142859" y="76.0" />
+      <point x="-51.75" y="25.5" />
+    </edge>
+    <edge source="presentation.GridPanel" target="business.Route">
+      <point x="-33.545454545454504" y="-203.0" />
+      <point x="1091.8295454545455" y="1005.0" />
+      <point x="1087.906785714286" y="1005.0" />
+      <point x="1087.906785714286" y="639.0" />
+      <point x="1039.625" y="639.0" />
+      <point x="-42.875" y="70.0" />
+    </edge>
+    <edge source="business.ProtocolHelper" target="datastorage.Protocol">
+      <point x="0.0" y="-69.5" />
+      <point x="576.0" y="395.0" />
+      <point x="264.9037987012987" y="395.0" />
+      <point x="105.60000000000002" y="137.0" />
+    </edge>
+    <edge source="presentation.MainFrame" target="business.ProtocolHelper">
+      <point x="19.272727272727252" y="-125.5" />
+      <point x="590.0227272727273" y="1451.0" />
+      <point x="650.0" y="1451.0" />
+      <point x="650.0" y="1005.0" />
+      <point x="630.0" y="1005.0" />
+      <point x="54.0" y="69.5" />
+    </edge>
+    <edge source="business.ProtocolHelper" target="business.Route">
+      <point x="72.0" y="-69.5" />
+      <point x="648.0" y="639.0" />
+      <point x="953.875" y="639.0" />
+      <point x="-128.625" y="70.0" />
+    </edge>
+    <edge source="presentation.MainFrame" target="presentation.TerminalFrame">
+      <point x="-57.81818181818187" y="-125.5" />
+      <point x="512.9318181818181" y="1471.0" />
+      <point x="193.4067857142859" y="1471.0" />
+      <point x="193.4067857142859" y="1005.0" />
+      <point x="260.25" y="1005.0" />
+      <point x="83.25" y="147.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4731810939989379" x="828.8215488215487" y="991.5" />
+  <SelectedNodes>
+    <node>presentation.MainFrame</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

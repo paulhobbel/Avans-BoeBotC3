@@ -173,6 +173,6 @@ public class MainFrame extends JFrame {
     }
 
     private void makeHelpScreen() {
-        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 3.0" );
+        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 3.4" );
     }
 }

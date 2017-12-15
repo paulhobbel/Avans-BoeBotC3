@@ -25,12 +25,12 @@ public class MainFrame extends JFrame {
         JPanel content = new JPanel(new GridLayout(1 , 2));
 
         this.contentLeft = new JPanel(new BorderLayout());
-        this.contentMiddle = new JPanel(new BorderLayout());
+       // this.contentMiddle = new JPanel(new BorderLayout());
      //   this.contentRight = new JPanel(new BorderLayout());
 
 
         content.add(this.contentLeft);
-        content.add(this.contentMiddle);
+//        content.add(this.contentMiddle);
        // content.add(this.contentRight);
 
 
@@ -38,12 +38,12 @@ public class MainFrame extends JFrame {
         //  borderContentRight.add(stuff.createGUI();
         this.makeMenuBar();
         this.makeLeftContent();
-        this.makeMiddleContent();
+//        this.makeMiddleContent();
         //this.makeRightContent();
 
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int)screenSize.getWidth() - 900;
+        int width = (int)screenSize.getWidth() - 1400;
         int height = (int)screenSize.getHeight() - 300;
         this.setSize(width, height);
 
@@ -142,7 +142,7 @@ public class MainFrame extends JFrame {
         CommandPanel commandPanel = new CommandPanel();
 
             //this.contentMiddle.add(new JLabel("BoeBot state: IDLE"), BorderLayout.NORTH);
-        this.contentMiddle.add(statusPanel, BorderLayout.NORTH);
+//        this.contentMiddle.add(statusPanel, BorderLayout.NORTH);
         this.contentMiddle.add(commandPanel);
        // this.contentMiddle.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
        // statusPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));

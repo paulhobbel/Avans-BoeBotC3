@@ -95,9 +95,9 @@ public class Bluetooth extends Updatable
      * @param string The string to send.
      */
     private void sendString (String string) {
-        char[] charArray = new String(string + "\n").toCharArray();
-        for(int i = 0; i < charArray.length; i++){
-            this.conn.writeByte(charArray[i]); 
+        char[] byteArray = new String(string + "\n").toCharArray();
+        for(int i = 0; i < byteArray.length; i++){
+            this.conn.writeByte(byteArray[i]); 
         }
     }
 

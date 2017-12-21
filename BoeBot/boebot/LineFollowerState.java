@@ -38,6 +38,7 @@ public class LineFollowerState extends State {
     //private int[] directions;
     private ArrayList<RelativeDirection> directions;
     private int directionIndex = 0;
+    private boolean firstCrossing = true;
 
     public LineFollowerState(Route route) {
         this.transmission = new Transmission();
@@ -48,30 +49,31 @@ public class LineFollowerState extends State {
         //directions = new int[]{1, 3}; //line
 
         this.directions = route.getDirections();
-        
+        this.firstCrossing = true;
+
         this.lineFollower.setEventListener(new LineFollowerEventListener()
-        {
-            @Override
-            public void onCrossing() {
-                
-            }
-            
-            @Override
-            public void onLine() {
-                
-            }
-            
-            @Override
-            public void onLineNoError() {
-                
-            }
-        });
-        
+            {
+                @Override
+                public void onCrossing() {
+
+                }
+
+                @Override
+                public void onLine() {
+
+                }
+
+                @Override
+                public void onLineNoError() {
+
+                }
+            });
+
     }
 
     public void update(StateContext context) {
         if(!this.busy) {
-            if(this.lineFollower.onCrossing() || this.turnOnly) {
+            if(this.lineFollower.onCrossing() || this.turnOnly || this.firstCrossing) {
                 if(getDirection() != RelativeDirection.NOTHING) {
                     this.counter = 0;
                     crossingUpdate();
@@ -84,6 +86,7 @@ public class LineFollowerState extends State {
                     this.transmission.brake(MEDIUM);
                     context.setState(new IdleState());
                 }
+                this.firstCrossing = false;
             }
             else {
                 followLine();
@@ -100,16 +103,16 @@ public class LineFollowerState extends State {
         this.busy = false;
         this.turnOnly = false;
         this.counter = 0;
-       
+
         context.setUltrasoneListener(new UltrasoneEvent()
-        {
-            @Override
-            public void onDistance(int distance) {
-                if(distance != -1 && distance < Constants.COLLISION_DISTANCE) {
-                    context.setState(new CollisionState());
+            {
+                @Override
+                public void onDistance(int distance) {
+                    if(distance != -1 && distance < Constants.COLLISION_DISTANCE) {
+                        context.setState(new CollisionState());
+                    }
                 }
-            }
-        });
+            });
     }
 
     private void followLine() {
@@ -120,12 +123,12 @@ public class LineFollowerState extends State {
 
     private RelativeDirection getDirection() {
         System.out.println("size: " + this.directions.size() + " index: " + this.directionIndex);
-        
+
         if(this.directions.size()-1 == this.directionIndex) {
             this.turnOnly = true;
             System.out.println("turnOnly");
         } 
-        
+
         if(this.directions.size() <= this.directionIndex) {
             //this.currentDirection = -1;
             this.currentDirection = RelativeDirection.NOTHING;

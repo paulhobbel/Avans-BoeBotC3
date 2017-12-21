@@ -139,21 +139,7 @@ public class MainFrame extends JFrame {
         this.content.add(gridPanel, BorderLayout.CENTER);
         this.content.add(bottomBar, BorderLayout.SOUTH);
 
-
-
     }
-
-//    private void makeMiddleContent() {
-//        StatusPanel statusPanel = new StatusPanel();
-//        CommandPanel commandPanel = new CommandPanel();
-//
-//            //this.contentMiddle.add(new JLabel("BoeBot state: IDLE"), BorderLayout.NORTH);
-//        this.contentMiddle.add(statusPanel, BorderLayout.NORTH);
-//        this.contentMiddle.add(commandPanel);
-//       // this.contentMiddle.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
-//       // statusPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
-//
-//    }
 
     private void initBluetooth(String portName){
         try {

@@ -10,42 +10,40 @@ import jssc.SerialPortException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 
-    private JPanel contentLeft;
-    private JPanel contentMiddle;
+    JPanel content;
 
     private static TerminalFrame terminal = new TerminalFrame();
 
     public MainFrame() {
 
-        JPanel content = new JPanel(new GridLayout(1 , 2));
+        //JPanel content = new JPanel(new GridLayout(1 , 2));
 
-        this.contentLeft = new JPanel(new BorderLayout());
-        this.contentMiddle = new JPanel(new BorderLayout());
+         this.content = new JPanel(new BorderLayout());
+        //this.contentMiddle = new JPanel(new BorderLayout());
      //   this.contentRight = new JPanel(new BorderLayout());
 
 
-        content.add(this.contentLeft);
-        content.add(this.contentMiddle);
+//        content.add(this.contentLeft);
+//        content.add(this.contentMiddle);
        // content.add(this.contentRight);
 
 
         // borderContentRight.add(new JLabel("Test"), BorderLayout.CENTER);
         //  borderContentRight.add(stuff.createGUI();
         this.makeMenuBar();
-        this.makeLeftContent();
-        this.makeMiddleContent();
-        //this.makeRightContent();
+//        this.makeLeftContent();
+//        this.makeMiddleContent();
+        //this.makeRightContent(
+        this.makeContent();
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        int width = (int)screenSize.getWidth() - 900;
+//        int height = (int)screenSize.getHeight() - 300;
+//        this.setSize(width, height);
 
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int)screenSize.getWidth() - 900;
-        int height = (int)screenSize.getHeight() - 300;
-        this.setSize(width, height);
+        this.setSize(600, 900);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -63,6 +61,7 @@ public class MainFrame extends JFrame {
 
 
 
+
         JMenu optionsCOMSubMenu = new JMenu("COM settings");
         optionsMenu.add(optionsCOMSubMenu);
 
@@ -71,8 +70,12 @@ public class MainFrame extends JFrame {
         optionsTermalCheckboxItem.addActionListener(e -> this.terminal.setVisible(true));
 
         JMenu musicPlayer = new JMenu("Music Player");
+        JMenuItem remote = new JMenuItem("Remote");
+
+       // toolsMenuremote.addActionListener(e -> this.terminal.setVisible(true));
 
         toolsMenu.add(musicPlayer);
+        toolsMenu.add(remote);
 
         JMenuItem helpAboutMenuItem = new JMenuItem("About the BoeBot...");
         helpAboutMenuItem.addActionListener(e -> makeHelpScreen());
@@ -109,7 +112,7 @@ public class MainFrame extends JFrame {
         // fileMenu.add(quitItem);
     }
 
-    private void makeLeftContent() {
+    private void makeContent() {
         JPanel bottomBar = new JPanel(new FlowLayout());
         GridPanel gridPanel = new GridPanel(11, 9);
 
@@ -133,21 +136,24 @@ public class MainFrame extends JFrame {
         bottomBar.add(undoButton);
         bottomBar.add(sendButton);
 
-        this.contentLeft.add(gridPanel, BorderLayout.CENTER);
-        this.contentLeft.add(bottomBar, BorderLayout.SOUTH);
-    }
+        this.content.add(gridPanel, BorderLayout.CENTER);
+        this.content.add(bottomBar, BorderLayout.SOUTH);
 
-    private void makeMiddleContent() {
-        StatusPanel statusPanel = new StatusPanel();
-        CommandPanel commandPanel = new CommandPanel();
 
-            //this.contentMiddle.add(new JLabel("BoeBot state: IDLE"), BorderLayout.NORTH);
-        this.contentMiddle.add(statusPanel, BorderLayout.NORTH);
-        this.contentMiddle.add(commandPanel);
-       // this.contentMiddle.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
-       // statusPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
 
     }
+
+//    private void makeMiddleContent() {
+//        StatusPanel statusPanel = new StatusPanel();
+//        CommandPanel commandPanel = new CommandPanel();
+//
+//            //this.contentMiddle.add(new JLabel("BoeBot state: IDLE"), BorderLayout.NORTH);
+//        this.contentMiddle.add(statusPanel, BorderLayout.NORTH);
+//        this.contentMiddle.add(commandPanel);
+//       // this.contentMiddle.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+//       // statusPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+//
+//    }
 
     private void initBluetooth(String portName){
         try {

@@ -11,6 +11,11 @@ import boebot.output.Tone;
  */
 public class ThomasTheTrain implements Sound {
     private int bpm = 100;
+    private int plays;
+    
+    public ThomasTheTrain(int plays) {
+        this.plays = plays;
+    }
 
     public void play(SoundContext context) {
         context.addToneMusic(new Tone(Tone.Gs3, Tone.EIGHT,this.bpm));
@@ -23,7 +28,7 @@ public class ThomasTheTrain implements Sound {
         context.addToneMusic(new Tone(Tone.Ds4, Tone.EIGHT,this.bpm));
         context.addToneMusic(new Tone(Tone.PAUSE, Tone.EIGHT,this.bpm));
 
-        for(int i = 0; i < 1; i++)
+        for(int i = 0; i < this.plays; i++)
         {
             context.addToneMusic(new Tone(Tone.G4, Tone.EIGHT,this.bpm));
             context.addToneMusic(new Tone(Tone.A4, Tone.EIGHT,this.bpm));

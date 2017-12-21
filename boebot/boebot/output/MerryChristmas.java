@@ -11,9 +11,14 @@ import boebot.output.Tone;
  */
 public class MerryChristmas implements Sound{
     private int bpm = 138;
+    private int plays;
+    
+    public MerryChristmas(int plays) {
+        this.plays = plays;
+    }
 
     public void play(SoundContext context) {
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < this.plays; i++) {
             context.addToneMusic(new Tone(Tone.G4, Tone.QUARTER, this.bpm));
             context.addToneMusic(new Tone(Tone.C5, Tone.QUARTER, this.bpm));
             context.addToneMusic(new Tone(Tone.C5, Tone.EIGHT, this.bpm));

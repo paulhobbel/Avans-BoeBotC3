@@ -36,7 +36,6 @@ public class Bluetooth {
         try {
             serialPort.removeEventListener();
         } catch (SerialPortException e) {
-            //e.printStackTrace();
             // Ignore this error completely!
         }
         try {
@@ -61,6 +60,15 @@ public class Bluetooth {
             }
         } catch (ProtocolException e) {
             e.printStackTrace();
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static byte[] readBytes() {
+        try {
+            return serialPort.readBytes();
         } catch (SerialPortException e) {
             e.printStackTrace();
         }

@@ -4,12 +4,14 @@ import business.ProtocolHelper;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import datastorage.Bluetooth;
 import datastorage.Protocol;
+import datastorage.ProtocolException;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
@@ -21,14 +23,14 @@ public class MainFrame extends JFrame {
 
         //JPanel content = new JPanel(new GridLayout(1 , 2));
 
-         this.content = new JPanel(new BorderLayout());
+        this.content = new JPanel(new BorderLayout());
         //this.contentMiddle = new JPanel(new BorderLayout());
-     //   this.contentRight = new JPanel(new BorderLayout());
+        //   this.contentRight = new JPanel(new BorderLayout());
 
 
 //        content.add(this.contentLeft);
 //        content.add(this.contentMiddle);
-       // content.add(this.contentRight);
+        // content.add(this.contentRight);
 
 
         // borderContentRight.add(new JLabel("Test"), BorderLayout.CENTER);
@@ -43,7 +45,7 @@ public class MainFrame extends JFrame {
 //        int height = (int)screenSize.getHeight() - 300;
 //        this.setSize(width, height);
 
-        this.setSize(600, 900);
+        this.setSize(400, 600);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -60,8 +62,6 @@ public class MainFrame extends JFrame {
         JMenu helpMenu = new JMenu("Help");
 
 
-
-
         JMenu optionsCOMSubMenu = new JMenu("COM settings");
         optionsMenu.add(optionsCOMSubMenu);
 
@@ -72,7 +72,7 @@ public class MainFrame extends JFrame {
         JMenu musicPlayer = new JMenu("Music Player");
         JMenuItem remote = new JMenuItem("Remote");
 
-       // toolsMenuremote.addActionListener(e -> this.terminal.setVisible(true));
+        // toolsMenuremote.addActionListener(e -> this.terminal.setVisible(true));
 
         toolsMenu.add(musicPlayer);
         toolsMenu.add(remote);
@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
         helpMenu.add(helpAboutMenuItem);
 
         String[] portNames = Bluetooth.getPortNames();
-        for(int i = 0; i < portNames.length; i++) {
+        for (int i = 0; i < portNames.length; i++) {
             final String portName = portNames[i];
 
             JMenuItem item = new JMenuItem(portName);
@@ -93,7 +93,6 @@ public class MainFrame extends JFrame {
 
             optionsCOMSubMenu.add(item);
         }
-
 
 
 //        for(int i =0; i <= 20; i++){
@@ -117,7 +116,7 @@ public class MainFrame extends JFrame {
         GridPanel gridPanel = new GridPanel(11, 9);
 
         //this.contentLeft.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
-       // bottomBar.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
+        // bottomBar.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
         gridPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
 
         JButton resetButton = new JButton("reset");
@@ -139,21 +138,56 @@ public class MainFrame extends JFrame {
         this.content.add(gridPanel, BorderLayout.CENTER);
         this.content.add(bottomBar, BorderLayout.SOUTH);
 
+        new Timer(1, e ->
+        {
+            //Bluetooth.update();
+        }).start();
     }
 
-    private void initBluetooth(String portName){
+    private void initBluetooth(String portName) {
         try {
+
+            //ArrayList<Byte> buffer = new ArrayList<>();
+            //StringBuilder builder = new StringBuilder();
+
             Bluetooth.connectToCOM(portName);
+//            Bluetooth.setEventListener(new Bluetooth.BluetoothEventListener() {
+//                @Override
+//                public void onProtocol(Protocol protocol) {
+//                    if (protocol != null) {
+//                        switch (protocol) {
+//                            case LOG:
+//                                terminal.addLog(protocol.getFunction(), protocol.getData());
+//                                break;
+//                        }
+//                    }
+//                }
+//            });
+            StringBuilder message = new StringBuilder();
             Bluetooth.addEventListener(new SerialPortEventListener() {
                 @Override
                 public void serialEvent(SerialPortEvent event) {
-                    if(event.isRXCHAR() && event.getEventValue() > 0) {
-                        Protocol protocol = Bluetooth.readProtocol(event.getEventValue());
-                        if (protocol != null) {
-                            switch (protocol) {
-                                case LOG:
-                                    terminal.addLog(protocol.getFunction(), protocol.getData());
-                                    break;
+                    if (event.isRXCHAR() && event.getEventValue() > 0) {
+                        byte buffer[] = Bluetooth.readBytes();
+                        for (byte b : buffer) {
+                            if ((b == '\r' || b == '\n') && message.length() > 0) {
+                                String protocolMessage = message.toString();
+
+                                try {
+                                    Protocol protocol = Protocol.convertMessage(protocolMessage);
+
+                                    switch (protocol) {
+                                        case LOG:
+                                            terminal.addLog(protocol.getFunction(), protocol.getData());
+                                            break;
+                                    }
+                                } catch (ProtocolException e) {
+                                    e.printStackTrace();
+                                }
+
+                                message.setLength(0);
+                            } else {
+                                message.append((char) b);
                             }
                         }
                     }
@@ -165,6 +199,6 @@ public class MainFrame extends JFrame {
     }
 
     private void makeHelpScreen() {
-        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 3.4" );
+        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 3.4");
     }
 }

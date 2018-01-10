@@ -54,6 +54,7 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
     }
 
+
     private void makeMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -70,6 +71,23 @@ public class MainFrame extends JFrame {
         optionsTermalCheckboxItem.addActionListener(e -> this.terminal.setVisible(true));
 
         JMenu musicPlayer = new JMenu("Music Player");
+
+        ArrayList<String> tracks = new ArrayList<>();
+        tracks.add("Darude Sandstorm");
+        tracks.add("Merry Christmas");
+        tracks.add("Mii Song");
+        tracks.add("Smoke Weed");
+        tracks.add("Thomas The Train");
+        tracks.add("We Are Number One");
+
+        for(String track : tracks) {
+            JMenuItem trackItem = new JMenuItem(track);
+
+            trackItem.addActionListener(e -> ProtocolHelper.playMusic(track));
+
+            musicPlayer.add(trackItem);
+        }
+
         JMenuItem remote = new JMenuItem("Remote");
 
         // toolsMenuremote.addActionListener(e -> this.terminal.setVisible(true));

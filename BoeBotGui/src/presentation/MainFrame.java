@@ -3,12 +3,14 @@ package presentation;
 import business.ProtocolHelper;
 import datastorage.Bluetooth;
 import datastorage.Protocol;
+import datastorage.ProtocolException;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
@@ -28,7 +30,7 @@ public class MainFrame extends JFrame {
         this.makeContent();
         this.makeProgresBar();
 
-        this.setSize(600, 900);
+        this.setSize(400, 600);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -54,7 +56,6 @@ public class MainFrame extends JFrame {
         JMenu musicPlayer = new JMenu("Music Player");
         JMenuItem remote = new JMenuItem("Remote");
 
-
         JFrame remoteFrame = new JFrame();
         remoteFrame.add(command);
         remoteFrame.setSize(400, 300 );
@@ -69,7 +70,7 @@ public class MainFrame extends JFrame {
         helpMenu.add(helpAboutMenuItem);
 
         String[] portNames = Bluetooth.getPortNames();
-        for(int i = 0; i < portNames.length; i++) {
+        for (int i = 0; i < portNames.length; i++) {
             final String portName = portNames[i];
 
             JMenuItem item = new JMenuItem(portName);
@@ -113,6 +114,10 @@ public class MainFrame extends JFrame {
         this.content.add(gridPanel, BorderLayout.CENTER);
         this.content.add(bottomBar, BorderLayout.SOUTH);
 
+        new Timer(1, e ->
+        {
+            //Bluetooth.update();
+        }).start();
     }
 
     private void makeProgresBar(){
@@ -130,17 +135,48 @@ public class MainFrame extends JFrame {
 
     private void initBluetooth(String portName){
         try {
+
+            //ArrayList<Byte> buffer = new ArrayList<>();
+            //StringBuilder builder = new StringBuilder();
+
             Bluetooth.connectToCOM(portName);
+//            Bluetooth.setEventListener(new Bluetooth.BluetoothEventListener() {
+//                @Override
+//                public void onProtocol(Protocol protocol) {
+//                    if (protocol != null) {
+//                        switch (protocol) {
+//                            case LOG:
+//                                terminal.addLog(protocol.getFunction(), protocol.getData());
+//                                break;
+//                        }
+//                    }
+//                }
+//            });
+            StringBuilder message = new StringBuilder();
             Bluetooth.addEventListener(new SerialPortEventListener() {
                 @Override
                 public void serialEvent(SerialPortEvent event) {
-                    if(event.isRXCHAR() && event.getEventValue() > 0) {
-                        Protocol protocol = Bluetooth.readProtocol(event.getEventValue());
-                        if (protocol != null) {
-                            switch (protocol) {
-                                case LOG:
-                                    terminal.addLog(protocol.getFunction(), protocol.getData());
-                                    break;
+                    if (event.isRXCHAR() && event.getEventValue() > 0) {
+                        byte buffer[] = Bluetooth.readBytes();
+                        for (byte b : buffer) {
+                            if ((b == '\r' || b == '\n') && message.length() > 0) {
+                                String protocolMessage = message.toString();
+
+                                try {
+                                    Protocol protocol = Protocol.convertMessage(protocolMessage);
+
+                                    switch (protocol) {
+                                        case LOG:
+                                            terminal.addLog(protocol.getFunction(), protocol.getData());
+                                            break;
+                                    }
+                                } catch (ProtocolException e) {
+                                    e.printStackTrace();
+                                }
+
+                                message.setLength(0);
+                            } else {
+                                message.append((char) b);
                             }
                         }
                     }
@@ -152,6 +188,6 @@ public class MainFrame extends JFrame {
     }
 
     private void makeHelpScreen() {
-        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 3.4" );
+        JOptionPane.showMessageDialog(this, "BoeBot\nVersion 3.4");
     }
 }

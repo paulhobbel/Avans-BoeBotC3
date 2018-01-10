@@ -13,7 +13,6 @@ public class StatusPanel extends JPanel {
 
         //this.statusLabel = new JProgressBar();
 
-
         this.add(this.statusLabel);
     }
 

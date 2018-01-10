@@ -1,7 +1,6 @@
 package presentation;
 
 import business.ProtocolHelper;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import datastorage.Bluetooth;
 import datastorage.Protocol;
 import jssc.SerialPortEvent;
@@ -16,32 +15,18 @@ public class MainFrame extends JFrame {
     JPanel content;
 
     private static TerminalFrame terminal = new TerminalFrame();
+    private static CommandPanel command = new CommandPanel();
+    private JProgressBar progressBar;
+    private static final int MY_MINIMUM = 0;
+    private static final int MY_MAXIMUM = 100;
+    private GridPanel gridPanel;
 
     public MainFrame() {
+        this.content = new JPanel(new BorderLayout());
 
-        //JPanel content = new JPanel(new GridLayout(1 , 2));
-
-         this.content = new JPanel(new BorderLayout());
-        //this.contentMiddle = new JPanel(new BorderLayout());
-     //   this.contentRight = new JPanel(new BorderLayout());
-
-
-//        content.add(this.contentLeft);
-//        content.add(this.contentMiddle);
-       // content.add(this.contentRight);
-
-
-        // borderContentRight.add(new JLabel("Test"), BorderLayout.CENTER);
-        //  borderContentRight.add(stuff.createGUI();
         this.makeMenuBar();
-//        this.makeLeftContent();
-//        this.makeMiddleContent();
-        //this.makeRightContent(
         this.makeContent();
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        int width = (int)screenSize.getWidth() - 900;
-//        int height = (int)screenSize.getHeight() - 300;
-//        this.setSize(width, height);
+        this.makeProgresBar();
 
         this.setSize(600, 900);
 
@@ -59,9 +44,6 @@ public class MainFrame extends JFrame {
         JMenu toolsMenu = new JMenu("Tools");
         JMenu helpMenu = new JMenu("Help");
 
-
-
-
         JMenu optionsCOMSubMenu = new JMenu("COM settings");
         optionsMenu.add(optionsCOMSubMenu);
 
@@ -72,7 +54,12 @@ public class MainFrame extends JFrame {
         JMenu musicPlayer = new JMenu("Music Player");
         JMenuItem remote = new JMenuItem("Remote");
 
-       // toolsMenuremote.addActionListener(e -> this.terminal.setVisible(true));
+
+        JFrame remoteFrame = new JFrame();
+        remoteFrame.add(command);
+        remoteFrame.setSize(400, 300 );
+        remoteFrame.setResizable(false);
+        remote.addActionListener(e -> remoteFrame.setVisible(true));
 
         toolsMenu.add(musicPlayer);
         toolsMenu.add(remote);
@@ -94,30 +81,17 @@ public class MainFrame extends JFrame {
             optionsCOMSubMenu.add(item);
         }
 
-
-
-//        for(int i =0; i <= 20; i++){
-//            item = new JMenuItem("COM " + i);
-//            setCom.add(item);
-//        }
-
         menuBar.add(optionsMenu);
         menuBar.add(toolsMenu);
         menuBar.add(helpMenu);
 
         this.setJMenuBar(menuBar);
-
-        // JMenuItem quitItem = new JMenuItem("Quit");
-        // quitItem.addActionListener(e -> quit());
-        // fileMenu.add(quitItem);
     }
 
     private void makeContent() {
         JPanel bottomBar = new JPanel(new FlowLayout());
-        GridPanel gridPanel = new GridPanel(11, 9);
+        gridPanel = new GridPanel(11, 9);
 
-        //this.contentLeft.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
-       // bottomBar.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
         gridPanel.setBorder(BorderFactory.createBevelBorder(0, Color.BLACK, Color.black));
 
         JButton resetButton = new JButton("reset");
@@ -139,6 +113,19 @@ public class MainFrame extends JFrame {
         this.content.add(gridPanel, BorderLayout.CENTER);
         this.content.add(bottomBar, BorderLayout.SOUTH);
 
+    }
+
+    private void makeProgresBar(){
+        progressBar = new JProgressBar();
+        progressBar.setMinimum(MY_MINIMUM);
+        progressBar.setMaximum(MY_MAXIMUM);
+        progressBar.setStringPainted(true);
+        this.content.add(progressBar, BorderLayout.NORTH);
+    }
+
+    public void updateBar(int newValue) {
+        newValue = 100/gridPanel.getRoute().getSize() * newValue;
+        progressBar.setValue(newValue);
     }
 
     private void initBluetooth(String portName){

@@ -110,7 +110,11 @@ public class Bluetooth extends Updatable
 
         COMMAND("EXEC"),
 
-        ROUTE("SET","GET","PROGRESS");
+        ROUTE("SET","GET","PROGRESS"),
+        
+        ERRORS("COLLISION"),
+        
+        MUSIC("PLAY", "PAUSE");
 
         private String[] functions;
         private String function;

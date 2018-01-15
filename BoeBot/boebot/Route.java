@@ -12,6 +12,7 @@ public class Route
 {
     // instance variables - replace the example below with your own
     private ArrayList<RelativeDirection> directions = new ArrayList<>();
+    private int currentProgress = 0;
 
     /**
      * Constructor for objects of class Route
@@ -22,7 +23,6 @@ public class Route
     }
 
     public void addDirection(RelativeDirection direction) {
-
         this.directions.add(direction);
     }
 

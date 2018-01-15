@@ -50,7 +50,7 @@ public class StateContext extends Updatable
         this.robot = robot;
         
         this.notification = new Notification();
-        this.protocolHelper = new ProtocolHelper();
+        this.protocolHelper = new ProtocolHelper(this.notification);
         
         initialState.init(this);
         this.stateHistory.add(0, initialState);
@@ -103,6 +103,10 @@ public class StateContext extends Updatable
     
     public Notification getNotification() {
         return this.notification;
+    }
+    
+    public ProtocolHelper getProtocolHelper() {
+        return this.protocolHelper;
     }
     
     public void update() {

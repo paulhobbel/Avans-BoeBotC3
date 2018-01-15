@@ -1,5 +1,7 @@
 package boebot;
 
+import boebot.output.*;
+
 import boebot.hardware.Bluetooth;
 import boebot.hardware.Bluetooth.BluetoothListener;
 import boebot.hardware.Bluetooth.Protocol;
@@ -13,9 +15,11 @@ import boebot.hardware.Bluetooth.Protocol;
 public class ProtocolHelper implements BluetoothListener
 {
     private Bluetooth bluetooth;
+    private Notification notification;
     private ProtocolRouteListener routeListener;
     
-    public ProtocolHelper() {
+    public ProtocolHelper(Notification notification) {
+        this.notification = notification;
         this.bluetooth = new Bluetooth();
         this.bluetooth.setListener(this);
     }
@@ -26,6 +30,10 @@ public class ProtocolHelper implements BluetoothListener
     
     public void sendRoute(Route route) {
         this.bluetooth.sendProtocol(Protocol.ROUTE, "GET", route.toString());
+    }
+    
+    public void sendRouteProgress(int progress) {
+        this.bluetooth.sendProtocol(Protocol.ROUTE, "PROGRESS", progress+"");
     }
     
     /**
@@ -61,6 +69,8 @@ public class ProtocolHelper implements BluetoothListener
                 case ROUTE:
                     this.handleRouteMessages(protocol.getFunction(), protocol.getData());
                     break;
+                case MUSIC:
+                    this.handleMusicMessages(protocol.getFunction(), protocol.getData());
             }
         } catch(Exception e) { // TODO: Make a ProtocolException sometime
             this.sendLog("ERROR", e.getMessage());
@@ -88,6 +98,35 @@ public class ProtocolHelper implements BluetoothListener
                 break;
             case "PROGRESS":
                 // Return ze progress...
+                break;
+        }
+    }
+    
+    private void handleMusicMessages(String function, String data) {
+        switch(function) {
+            case "PLAY":
+                switch(data.replace("\n", "")) {
+                    case "Darude Sandstorm":
+                        this.notification.playSound(new DarudeSandstorm(5));
+                        break;
+                    case "Merry Christmas":
+                        this.notification.playSound(new MerryChristmas(5));
+                        break;
+                    case "Mii Song":
+                        this.notification.playSound(new Mii(5));
+                        break;
+                    case "Smoke Weed":
+                        this.notification.playSound(new SmokeWeed(5));
+                        break;
+                    case "Thomas The Train":
+                        this.notification.playSound(new ThomasTheTrain(1));
+                        break;
+                    case "We Are Number One":
+                        this.notification.playSound(new WeAreNumberOne(10));
+                }
+                break;
+            case "PAUSE":
+            
                 break;
         }
     }

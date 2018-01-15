@@ -180,6 +180,10 @@ public class MainFrame extends JFrame {
                                         case LOG:
                                             terminal.addLog(protocol.getFunction(), protocol.getData());
                                             break;
+
+                                        case ROUTE:
+                                            if(protocol.getFunction().equals())
+                                            terminal.addLog("DEBUG", protocol.getFunction() + protocol.getData());
                                     }
                                 } catch (ProtocolException e) {
                                     e.printStackTrace();

@@ -78,6 +78,7 @@ public class LineFollowerState extends State {
                     this.counter = 0;
                     crossingUpdate();
                     this.busy = true;
+                    context.getProtocolHelper().sendRouteProgress(this.directionIndex);
                     System.out.println("Crossing...");
                 }
                 else {

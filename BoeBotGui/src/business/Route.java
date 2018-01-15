@@ -88,6 +88,12 @@ public class Route {
         return path;
     }
 
+    public int getSize(){
+
+        return rawDirections.size();
+
+    }
+
     public String toString() {
         return Arrays.toString(this.calculateRelativePath().toArray());
     }

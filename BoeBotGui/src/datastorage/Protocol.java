@@ -14,7 +14,9 @@ public enum Protocol {
 
     COMMAND("EXEC"),
 
-    ROUTE("SET","GET","PROGRESS");
+    ROUTE("SET","GET","PROGRESS"),
+
+    MUSIC("PLAY", "PAUSE");
 
     private String[] functions;
     private String function;

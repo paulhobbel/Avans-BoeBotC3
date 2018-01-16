@@ -85,6 +85,7 @@ public class LineFollowerState extends State {
                     System.out.println("Done with the directions. Starting over...");
                     //followLine();
                     this.transmission.brake(MEDIUM);
+                    context.getProtocolHelper().sendRouteProgress(this.directions.size());
                     context.setState(new IdleState());
                 }
                 this.firstCrossing = false;

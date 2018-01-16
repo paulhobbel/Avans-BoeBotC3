@@ -36,6 +36,10 @@ public class ProtocolHelper implements BluetoothListener
         this.bluetooth.sendProtocol(Protocol.ROUTE, "PROGRESS", progress+"");
     }
     
+    public void sendSensorError(String error, String message) {
+        this.bluetooth.sendProtocol(Protocol.ERRORS, error, message);
+    }
+    
     /**
      * Send log with level info to GUI.
      * 

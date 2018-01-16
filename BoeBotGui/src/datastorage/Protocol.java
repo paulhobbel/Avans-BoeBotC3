@@ -16,6 +16,8 @@ public enum Protocol {
 
     ROUTE("SET","GET","PROGRESS"),
 
+    ERRORS("COLLISION"),
+
     MUSIC("PLAY", "PAUSE");
 
     private String[] functions;

@@ -1,6 +1,7 @@
 package presentation;
 
 import business.ProtocolHelper;
+import business.Route;
 import datastorage.Bluetooth;
 import datastorage.Protocol;
 import datastorage.ProtocolException;
@@ -118,8 +119,11 @@ public class MainFrame extends JFrame {
         JButton sendButton = new JButton("send");
 
         resetButton.addActionListener(e -> gridPanel.resetRoute());
-        undoButton.addActionListener(e -> System.out.println("Undo: " + e));
-        sendButton.addActionListener(e -> ProtocolHelper.sendRoute(gridPanel.getRoute()));
+        undoButton.addActionListener(e -> gridPanel.undoRoute());
+        sendButton.addActionListener(e -> {
+                    progressBar.setValue(0);
+                    ProtocolHelper.sendRoute(gridPanel.getRoute());
+                });
 
         resetButton.setPreferredSize(new Dimension(100, 50));
         undoButton.setPreferredSize(new Dimension(100, 50));
@@ -131,45 +135,32 @@ public class MainFrame extends JFrame {
 
         this.content.add(gridPanel, BorderLayout.CENTER);
         this.content.add(bottomBar, BorderLayout.SOUTH);
-
-        new Timer(1, e ->
-        {
-            //Bluetooth.update();
-        }).start();
     }
 
     private void makeProgresBar(){
         progressBar = new JProgressBar();
         progressBar.setMinimum(MY_MINIMUM);
         progressBar.setMaximum(MY_MAXIMUM);
-        progressBar.setStringPainted(true);
+        progressBar.setStringPainted(false);
         this.content.add(progressBar, BorderLayout.NORTH);
     }
 
-    public void updateBar(int newValue) {
-        newValue = 100/gridPanel.getRoute().getSize() * newValue;
+    public void setProgress(int progressIndex) {
+        //newValue = (newValue / gridPanel.getRoute().getSize()) * 100; //100/gridPanel.getRoute().getSize() * newValue;
+        ArrayList<Route.RelativeDirection> route = gridPanel.getRoute().calculateRelativePath();
+
+        int newValue = (int) Math.round(((double) (progressIndex) / (route.size())) * 100);
+
+        System.out.println(progressIndex);
+        System.out.println(route.size());
+        System.out.println(((double) (progressIndex+1) / (route.size())));
+
         progressBar.setValue(newValue);
     }
 
     private void initBluetooth(String portName){
         try {
-
-            //ArrayList<Byte> buffer = new ArrayList<>();
-            //StringBuilder builder = new StringBuilder();
-
             Bluetooth.connectToCOM(portName);
-//            Bluetooth.setEventListener(new Bluetooth.BluetoothEventListener() {
-//                @Override
-//                public void onProtocol(Protocol protocol) {
-//                    if (protocol != null) {
-//                        switch (protocol) {
-//                            case LOG:
-//                                terminal.addLog(protocol.getFunction(), protocol.getData());
-//                                break;
-//                        }
-//                    }
-//                }
-//            });
             StringBuilder message = new StringBuilder();
             Bluetooth.addEventListener(new SerialPortEventListener() {
                 @Override
@@ -189,8 +180,16 @@ public class MainFrame extends JFrame {
                                             break;
 
                                         case ROUTE:
-                                            if(protocol.getFunction().equals())
+                                            if(protocol.getFunction().equals("PROGRESS")) {
+                                                setProgress(Integer.parseInt(protocol.getData()));
+                                            }
                                             terminal.addLog("DEBUG", protocol.getFunction() + protocol.getData());
+                                            break;
+
+                                        case ERRORS:
+                                            if(protocol.getFunction().equals("COLLISION")) {
+                                                JOptionPane.showMessageDialog(null, protocol.getData(), "Collision Detection", JOptionPane.WARNING_MESSAGE);
+                                            }
                                     }
                                 } catch (ProtocolException e) {
                                     e.printStackTrace();

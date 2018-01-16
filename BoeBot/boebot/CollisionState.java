@@ -69,6 +69,8 @@ public class CollisionState extends State
             }
         );
         
+        context.getProtocolHelper().sendSensorError("COLLISION", "Obstacle detected! Please use the remote to override.");
+        
         this.transmission.brake(FAST);
     }
 

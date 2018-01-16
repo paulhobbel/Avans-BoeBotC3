@@ -69,13 +69,18 @@ public class GridPanel extends JPanel implements MouseListener {
     }
 
     public void undoRoute() {
-        this.routeButtons.get(this.routeButtons.size() - 1).setType(GridButton.GridButtonType.BASIC);
-        this.routeButtons.remove(this.routeButtons.size() - 1);
-        this.routeButtons.get(this.routeButtons.size() - 1).setType(GridButton.GridButtonType.END);
+        if(this.routeButtons.size() > 0) {
+            this.routeButtons.get(this.routeButtons.size() - 1).setType(GridButton.GridButtonType.BASIC);
+            this.routeButtons.remove(this.routeButtons.size() - 1);
+            this.route.removeLastRawDirection();
+            if(this.routeButtons.size() > 1) {
+                this.routeButtons.get(this.routeButtons.size() - 1).setType(GridButton.GridButtonType.END);
+            }
+        }
 
         if(this.lines.size() > 0) {
             this.lines.remove(this.lines.size() - 1);
-            this.route.removeLastRawDirection();
+
         }
 
         this.repaint();

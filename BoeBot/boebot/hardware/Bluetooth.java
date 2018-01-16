@@ -95,9 +95,9 @@ public class Bluetooth extends Updatable
      * @param string The string to send.
      */
     private void sendString (String string) {
-        char[] charArray = new String(string + "\n").toCharArray();
-        for(int i = 0; i < charArray.length; i++){
-            this.conn.writeByte(charArray[i]); 
+        byte[] byteArray = new String(string + "\n").getBytes();
+        for(int i = 0; i < byteArray.length; i++) {
+            this.conn.writeByte(byteArray[i]);
         }
     }
 
@@ -110,7 +110,11 @@ public class Bluetooth extends Updatable
 
         COMMAND("EXEC"),
 
-        ROUTE("SET","GET","PROGRESS");
+        ROUTE("SET","GET","PROGRESS"),
+        
+        ERRORS("COLLISION"),
+        
+        MUSIC("PLAY", "PAUSE");
 
         private String[] functions;
         private String function;

@@ -50,7 +50,7 @@ public class StateContext extends Updatable
         this.robot = robot;
         
         this.notification = new Notification();
-        this.protocolHelper = new ProtocolHelper();
+        this.protocolHelper = new ProtocolHelper(this.notification);
         
         initialState.init(this);
         this.stateHistory.add(0, initialState);
@@ -83,7 +83,6 @@ public class StateContext extends Updatable
     // }
     
     public void setProtocolRouteListener(ProtocolRouteListener listener) {
-        System.out.println("Set listener.");
         this.protocolHelper.setRouteListener(listener);
     }
     
@@ -99,11 +98,15 @@ public class StateContext extends Updatable
         newState.init(this);
         this.stateHistory.add(0, newState);
         
-        System.out.println("Switched to state: " + newState + ", there are " + (this.stateHistory.size()-1) + " previous states.");
+        this.protocolHelper.sendLog("DEBUG", "Switched to state: " + newState + ", there are " + (this.stateHistory.size()-1) + " previous states.");
     }
     
     public Notification getNotification() {
         return this.notification;
+    }
+    
+    public ProtocolHelper getProtocolHelper() {
+        return this.protocolHelper;
     }
     
     public void update() {
@@ -127,7 +130,7 @@ public class StateContext extends Updatable
         State previousState = this.stateHistory.get(0);
         previousState.init(this);
         
-        System.out.println("Went back to previousState: " + previousState + ", there are " + (this.stateHistory.size()-1) + " previous states.");
+        this.protocolHelper.sendLog("DEBUG", "Went back to previousState: " + previousState + ", there are " + (this.stateHistory.size()-1) + " previous states.");
     }
     
     /**

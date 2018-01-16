@@ -11,9 +11,14 @@ import boebot.output.Tone;
  */
 public class Mii implements Sound {
     private int bpm = 114;
+    private int plays;
+    
+    public Mii(int plays) {
+        this.plays = plays;
+    }
 
     public void play(SoundContext context) {
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < this.plays; i++) {
             context.addToneMusic(new Tone(Tone.Fs4, Tone.EIGHT, this.bpm));
             context.addToneMusic(new Tone(Tone.PAUSE, Tone.EIGHT, this.bpm));
             context.addToneMusic(new Tone(Tone.A4, Tone.EIGHT, this.bpm));

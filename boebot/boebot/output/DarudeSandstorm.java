@@ -11,9 +11,14 @@ import boebot.output.Tone;
  */
 public class DarudeSandstorm implements Sound{
     private int bpm = 136;
+    private int plays;
+    
+    public DarudeSandstorm(int plays) {
+        this.plays = plays;
+    }
 
     public void play(SoundContext context) {
-        for(int j = 0; j < 2; j++) {
+        for(int j = 0; j < this.plays; j++) {
             for(int i = 0; i < 4; i++)
                 context.addToneMusic(new Tone(Tone.B4, Tone.SIXTEENTH, this.bpm));
             context.addToneMusic(new Tone(Tone.B4, Tone.EIGHT, this.bpm));

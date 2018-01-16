@@ -60,6 +60,7 @@ public class TerminalFrame extends JFrame {
 
         for (String function : selectedProtocol.getFunctions()) {
             this.protocolFunctionComboBox.addItem(function);
+
         }
     }
 

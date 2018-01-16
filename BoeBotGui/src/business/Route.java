@@ -39,6 +39,8 @@ public class Route {
         this.rawDirections.clear();
     }
 
+    public void removeLastRawDirection() { this.rawDirections.remove(this.rawDirections.size()-1); }
+
     public ArrayList<RelativeDirection> calculateRelativePath() {
         ArrayList<RelativeDirection> path = new ArrayList<>();
         if(this.rawDirections.size() < 1) {
@@ -86,6 +88,10 @@ public class Route {
         System.out.println(Arrays.toString(path.toArray()));
 
         return path;
+    }
+
+    public int getSize(){
+        return rawDirections.size();
     }
 
     public String toString() {

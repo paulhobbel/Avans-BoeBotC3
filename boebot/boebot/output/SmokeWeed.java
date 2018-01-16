@@ -11,9 +11,14 @@ import boebot.output.Tone;
  */
 public class SmokeWeed implements Sound{
     private int bpm = 100;
+    private int plays;
+    
+    public SmokeWeed(int plays) {
+        this.plays = plays;
+    }
 
     public void play(SoundContext context) {
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < this.plays; i++) {
             context.addToneMusic(new Tone(Tone.E4, Tone.QUARTER, this.bpm));
             context.addToneMusic(new Tone(Tone.B4, Tone.QUARTER, this.bpm));
             context.addToneMusic(new Tone(Tone.B4, Tone.EIGHT, this.bpm));

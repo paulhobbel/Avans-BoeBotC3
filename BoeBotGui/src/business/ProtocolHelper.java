@@ -49,4 +49,18 @@ public class ProtocolHelper {
     public static void sendCommand(String command) {
         Bluetooth.sendProtocol(Protocol.COMMAND, "EXEC", command);
     }
+
+    /**
+     * Play music on BoeBot
+     *
+     * @param track The selected track will be played.
+     */
+    public static void playMusic(String track){
+        Bluetooth.sendProtocol(Protocol.MUSIC, "PLAY", track);
+    }
+
+    public static void pauseMusic(){
+        Bluetooth.sendProtocol(Protocol.MUSIC, "PAUSE", "kek");
+
+    }
 }

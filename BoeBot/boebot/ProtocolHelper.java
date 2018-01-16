@@ -130,7 +130,7 @@ public class ProtocolHelper implements BluetoothListener
                 }
                 break;
             case "PAUSE":
-            
+                this.notification.getSoundContext().removeAllTones();
                 break;
         }
     }

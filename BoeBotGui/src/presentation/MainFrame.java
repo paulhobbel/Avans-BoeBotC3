@@ -73,6 +73,11 @@ public class MainFrame extends JFrame {
             musicPlayer.add(trackItem);
         }
 
+        JMenuItem pauseButton = new JMenuItem("Pause");
+        pauseButton.addActionListener(e -> ProtocolHelper.pauseMusic());
+
+        musicPlayer.add(pauseButton);
+
         JMenuItem remote = new JMenuItem("Remote");
 
         JFrame remoteFrame = new JFrame();
@@ -82,7 +87,7 @@ public class MainFrame extends JFrame {
         remote.addActionListener(e -> remoteFrame.setVisible(true));
 
         toolsMenu.add(musicPlayer);
-        toolsMenu.add(remote);
+        // toolsMenu.add(remote);
 
         JMenuItem helpAboutMenuItem = new JMenuItem("About the BoeBot...");
         helpAboutMenuItem.addActionListener(e -> makeHelpScreen());

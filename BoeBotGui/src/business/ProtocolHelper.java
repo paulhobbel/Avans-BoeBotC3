@@ -60,7 +60,7 @@ public class ProtocolHelper {
     }
 
     public static void pauseMusic(){
-        Bluetooth.sendProtocol(Protocol.MUSIC, "PAUSE", "");
+        Bluetooth.sendProtocol(Protocol.MUSIC, "PAUSE", "kek");
 
     }
 }
